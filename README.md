@@ -2,12 +2,12 @@
 
 企业软件开发、AI Agent 搭建、工作流自动化与网站搭建服务官网。
 
-线上地址：<https://lizi-product-studio.github.io/dingxinglizi-ideas/>
+线上地址：<https://lizi-product-studio.github.io/>
 
 ## 技术架构
 
 - **Vite + TypeScript + Tailwind CSS v4** 多页静态应用（MPA）
-- 构建配置 `base: './'`，兼容 GitHub Pages 子路径发布，不依赖运行期后端或 CDN
+- 构建配置 `base: './'`，兼容 GitHub Pages 根域名或子路径发布，不依赖运行期后端或 CDN
 - 共享 Header / Footer 通过 [vite.config.ts](vite.config.ts) 在开发和构建期直接注入 HTML，避免首屏闪烁
 - 字体资产使用本地打包的 Manrope 字体（许可见 `src/assets/fonts/manrope.OFL.txt`）
 

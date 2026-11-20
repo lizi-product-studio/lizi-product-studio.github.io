@@ -1,9 +1,9 @@
 {
-  "name": "dingxinglizi-ideas",
+  "name": "lizi-software-website",
   "private": true,
   "version": "2.0.0",
   "type": "module",
-  "description": "栗子软件科技官网（定兴县栗子软件科技店）— 企业软件开发、AI Agent 搭建、工作流自动化与网站搭建",
+  "description": "栗子软件科技官网（定兴县栗子软件科技店）— 企业软件开发、AI Agent 搭建、工作流自动化与企业官网建设",
   "scripts": {
     "dev": "vite",
     "typecheck": "tsc --noEmit",
