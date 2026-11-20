@@ -42,19 +42,6 @@
   }
 }
 
-/* 原生 FAQ 展开箭头旋转与简洁细节 */
-details.faq-item > summary {
-  list-style: none;
-}
-
-details.faq-item > summary::-webkit-details-marker {
-  display: none;
-}
-
-details.faq-item[open] .faq-chevron {
-  transform: rotate(180deg);
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

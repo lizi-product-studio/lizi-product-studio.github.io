@@ -1,129 +1,128 @@
-export type HeroSystemMode = 'software' | 'agent' | 'workflow';
-
-export interface HeroModeSpec {
-  id: HeroSystemMode;
-  tabLabel: string;
-  badge: string;
-  headline: string;
+export interface HomeServiceItem {
+  id: string;
+  title: string;
   summary: string;
+  href: string;
+  iconSvg: string;
+}
+
+export const HOME_SERVICES: readonly HomeServiceItem[] = [
+  {
+    id: 'software',
+    title: '企业软件开发',
+    summary: '贴合实际业务逻辑定制订单、客户与项目协同系统，数据统一且权限清晰。',
+    href: 'capabilities.html#software',
+    iconSvg:
+      '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></svg>'
+  },
+  {
+    id: 'agent',
+    title: 'AI Agent 搭建',
+    summary: '基于团队确认可用资料建立知识问答与内容起草助手，答案附带可核对来源。',
+    href: 'capabilities.html#agent',
+    iconSvg:
+      '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6 5.6 18.4"/><circle cx="12" cy="12" r="4" fill="white"/></svg>'
+  },
+  {
+    id: 'automation',
+    title: '工作流自动化',
+    summary: '减少表单、表格与群聊之间的重复搬运，按规则自动同步记录与提醒负责人。',
+    href: 'capabilities.html#automation',
+    iconSvg:
+      '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="7" height="6" rx="1.5"/><rect x="14" y="14" width="7" height="6" rx="1.5"/><path d="M10 7h5a2 2 0 0 1 2 2v5M7 10v5a2 2 0 0 0 2 2h5"/></svg>'
+  },
+  {
+    id: 'web',
+    title: '企业官网建设',
+    summary: '梳理企业核心业务表达，打造电脑与手机端都清晰易懂、方便转化的品牌官网。',
+    href: 'capabilities.html#web',
+    iconSvg:
+      '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a14.5 14.5 0 0 1 0 18M12 3a14.5 14.5 0 0 0 0 18"/></svg>'
+  }
+];
+
+export type HomeScenarioId = 'operations' | 'agent' | 'workflow';
+
+export interface HomeScenarioSpec {
+  id: HomeScenarioId;
+  tabLabel: string;
+  title: string;
+  description: string;
+  points: readonly string[];
   demoHref: string;
   demoLabel: string;
 }
 
-export const HERO_MODES: Record<HeroSystemMode, HeroModeSpec> = {
-  software: {
-    id: 'software',
-    tabLabel: '业务软件',
-    badge: '序章 · 运营工作台',
-    headline: '订单、任务与进度集中在一个面板查看',
-    summary: '替代散落在多个表格与群聊里的手工对齐，负责人与交付状态一目了然。',
+export const HOME_SCENARIOS: Record<HomeScenarioId, HomeScenarioSpec> = {
+  operations: {
+    id: 'operations',
+    tabLabel: '运营与订单协同',
+    title: '告别多表核对，进度与责任人一目了然',
+    description:
+      '把散落在群聊、表格与个人备忘里的订单交期、任务归属和操作记录集中到一个清晰的工作台。',
+    points: [
+      '订单改期或变更后，发货与跟单同事打开同一页面即可查看最新版',
+      '每项关键任务绑定责任人与验收条件，减少反复在群里追问进度',
+      '操作确认自动留痕，随时追溯谁在什么时候完成了哪一步'
+    ],
     demoHref: 'project.html?project=operations',
-    demoLabel: '体验工作台演示'
+    demoLabel: '体验运营工作台演示'
   },
   agent: {
     id: 'agent',
-    tabLabel: 'AI Agent',
-    badge: '知间 · 知识 Agent',
-    headline: '围绕企业确认可用资料检索答案并附带原文出处',
-    summary: '限定员工有权查看的知识范围，重要答复与对外决策仍由人工核对确认。',
+    tabLabel: '企业知识问答 AI',
+    title: '让团队资料直接开口回答，每条结论可溯源',
+    description:
+      '将零散的产品说明、制度规范与常见问题整理为知识助手，按岗位权限检索并展示原文出处。',
+    points: [
+      '仅检索授权范围内的企业资料，无权限文档绝不越权带入回答',
+      '回答下方直接关联原文片段与版本号，方便人工快速点开核对',
+      '遇到资料不足或关键业务承诺，明确提示并保留人工最终复核'
+    ],
     demoHref: 'project.html?project=agent',
-    demoLabel: '体验知识问答演示'
+    demoLabel: '体验知识 Agent 演示'
   },
   workflow: {
     id: 'workflow',
-    tabLabel: '工作流自动化',
-    badge: '有序 · 审批工作流',
-    headline: '按预设规则整理表单、触发审批并自动留存记录',
-    summary: '减少重复复制粘贴；遇到信息缺失或异常情况时及时通知对应负责人核查。',
+    tabLabel: '自动化审批流转',
+    title: '按约定规则自动流转，异常节点人工兜底',
+    description:
+      '打通申请提交、规则判断与审批提醒，让重复性的信息登记与分发交给流程自动完成。',
+    points: [
+      '提交申请时先做必填字段校验，信息缺失及时提示补充',
+      '按金额或业务类型自动匹配审批路径，并第一时间提醒对应负责人',
+      '遇到异常或驳回情况清楚留痕，最终审批决定仍由人作出'
+    ],
     demoHref: 'project.html?project=workflow',
-    demoLabel: '体验流程流转演示'
+    demoLabel: '体验审批工作流演示'
   }
 };
 
-export interface ProblemScenarioCard {
-  index: string;
-  service: string;
-  title: string;
-  pain: string;
-  solution: string;
-  outcome: string;
-  href: string;
-  cta: string;
-}
-
-export const HOME_PROBLEMS: readonly ProblemScenarioCard[] = [
-  {
-    index: '01',
-    service: '企业软件开发',
-    title: '订单改了，发货还在看旧表。',
-    pain: '订单、交期和进度分散在几份表里，问到哪一步还得逐个找人。',
-    solution: '根据现有做事方式搭建业务系统，把订单、更新记录和负责人放到一起。',
-    outcome: '发货同事打开订单就能看最新内容；负责人也能看到谁在处理、下一步等什么。',
-    href: 'capabilities.html?scenario=software#cap-experience',
-    cta: '看看订单怎么管理'
-  },
-  {
-    index: '02',
-    service: 'AI Agent 搭建',
-    title: '资料都在，问题还是反复问。',
-    pain: '制度、产品资料和操作说明散在不同文件里，新同事找不到，熟悉业务的人常常要停下来回答。',
-    solution: '把确认可用的资料整理成知识助手，查找常见问题时同时列出来源。',
-    outcome: '同事可以先查答案、打开原文核对；资料不足时再找负责人，重要答复仍由人确认。',
-    href: 'capabilities.html?scenario=agent#cap-experience',
-    cta: '看看知识助手怎么用'
-  },
-  {
-    index: '03',
-    service: '工作流自动化',
-    title: '一份信息，要填好几遍。',
-    pain: '客户提交表单后，还要复制进表格、通知同事，再追着确认有没有处理。',
-    solution: '先看现有工具能否连接，再设置收到表单后的记录和提醒步骤。',
-    outcome: '新表单进来后，信息自动记到指定位置并提醒负责同事；信息缺失或异常时交由负责人检查。',
-    href: 'capabilities.html?scenario=workflow#cap-experience',
-    cta: '看看重复步骤怎么处理'
-  },
-  {
-    index: '04',
-    service: '网站搭建',
-    title: '客户打开官网，却看不清能做什么。',
-    pain: '业务介绍分散，手机上阅读不方便，想联系时也找不到入口。',
-    solution: '先整理服务内容和客户关心的问题，再设计适合电脑和手机浏览的网站。',
-    outcome: '客户进站后能快速了解业务介绍、服务范围与合作方式，也能顺畅找到联系入口。',
-    href: 'capabilities.html#web',
-    cta: '看看网站怎么做'
-  }
-];
-
-export interface CooperationStep {
+export interface HomeProcessStep {
   step: string;
-  phase: string;
   title: string;
   description: string;
 }
 
-export const COOPERATION_STEPS: readonly CooperationStep[] = [
+export const HOME_PROCESS_STEPS: readonly HomeProcessStep[] = [
   {
     step: '01',
-    phase: '了解现状',
-    title: '先聊怎么做事',
-    description: '看看现在用什么工具，哪一步最费事，谁会使用。'
+    title: '需求沟通',
+    description: '了解当前工作方式与最耗时的卡点，先不急着推翻原有工具。'
   },
   {
     step: '02',
-    phase: '确认方案',
-    title: '把要做的说清楚',
-    description: '约定功能、范围和验收方式，必要时先用原型确认操作。'
+    title: '方案确认',
+    description: '明确本期要做的功能范围、交付清单与验收标准，必要时先出原型。'
   },
   {
     step: '03',
-    phase: '开发验证',
-    title: '拿实际场景来试',
-    description: '按约定节点查看进展，用业务样本检查正常情况和异常情况。'
+    title: '开发验证',
+    description: '按约定节点同步进展，结合真实业务样本测试正常与异常场景。'
   },
   {
     step: '04',
-    phase: '验收交接',
-    title: '交付后知道怎么用',
-    description: '按约定验收，交接使用说明，并明确后续支持范围。'
+    title: '验收交付',
+    description: '按约定标准共同核对验收，交接使用说明并明确后续支持范围。'
   }
 ];

@@ -1,3 +1,7 @@
+import solutionAgentImg from '../assets/images/solution-agent.jpg';
+import solutionSoftwareImg from '../assets/images/solution-software.jpg';
+import solutionWorkflowImg from '../assets/images/solution-workflow.jpg';
+
 export type ConceptId = 'operations' | 'agent' | 'workflow';
 
 export interface ConceptTabSpec {
@@ -6,31 +10,24 @@ export interface ConceptTabSpec {
 }
 
 export interface ConceptScopeRow {
-  index: string;
   title: string;
   detail: string;
-  status: string;
-  present: boolean;
+  includedInDemo: boolean;
 }
 
 export interface ConceptSpec {
   id: ConceptId;
-  number: string;
   name: string;
   subtitle: string;
-  english: string;
   categoryTag: string;
   filterCategory: 'software' | 'agent' | 'workflow';
-  serviceKey: 'software' | 'agent' | 'workflow';
+  serviceKey: 'software' | 'agent' | 'automation';
+  image: string;
+  imageAlt: string;
   shortSummary: string;
-  typeLabel: string;
-  fieldsLabel: string;
   contextTitle: string;
   contextBody: string;
-  contextQuestion: string;
-  approachTitle: string;
-  steps: readonly { index: string; tag: string; title: string; detail: string }[];
-  scopeIntro: string;
+  approachSteps: readonly { title: string; detail: string }[];
   scopes: readonly ConceptScopeRow[];
   tabs: readonly ConceptTabSpec[];
   nextId: ConceptId;
@@ -39,48 +36,36 @@ export interface ConceptSpec {
 export const CONCEPTS: Record<ConceptId, ConceptSpec> = {
   operations: {
     id: 'operations',
-    number: '01',
     name: '序章',
     subtitle: '运营工作台',
-    english: 'OPERATIONS',
-    categoryTag: '企业软件开发',
+    categoryTag: '企业软件',
     filterCategory: 'software',
     serviceKey: 'software',
-    shortSummary: '把项目进度、负责人与操作记录收拢到一个工作台，试着确认一项示例任务并查看记录联动。',
-    typeLabel: '企业协作 · 交互概念',
-    fieldsLabel: '产品设计 / 交互结构 / 前端原型',
-    contextTitle: '任务发在群里，进度还要挨个问。',
+    image: solutionSoftwareImg,
+    imageAlt: '企业运营协同系统模块化 3D 视觉图',
+    shortSummary: '把散落在表格和群聊中的项目进展、责任人与操作记录集中到一个清晰的工作台。',
+    contextTitle: '任务发在群里，进度还要逐个追问',
     contextBody:
-      '多个人同时做事时，任务可能在群聊里，进度记在表格里，确认结果又散在不同消息里。这个概念把项目、负责人、任务状态和操作记录放在一起，看看日常协作可以如何进行。',
-    contextQuestion: '谁在负责，下一步等什么？',
-    approachTitle: '打开任务，就能看到进展。',
-    steps: [
+      '多部门协同做事时，最新要求常散落在聊天记录与多份表格里。这个原型演示了如何将项目进度、待确认事项与操作留痕统一在同一个视角下。',
+    approachSteps: [
       {
-        index: '01',
-        tag: '01 / 项目与任务',
         title: '看清项目与负责人',
-        detail: '从项目列表查看当前阶段，再进入具体任务，知道谁负责、还需要做什么。'
+        detail: '从项目总览掌握当前推进阶段，点击进入对应任务即可知道谁在负责、还需要确认什么。'
       },
       {
-        index: '02',
-        tag: '02 / 工作信息',
-        title: '把相关信息放在一起',
-        detail: '任务旁展示相关说明和交付内容，减少在不同消息中来回寻找。'
+        title: '关键信息集中放置',
+        detail: '任务旁集中展示背景说明、验收标准与交付物信息，减少在聊天记录里反复翻找。'
       },
       {
-        index: '03',
-        tag: '03 / 操作记录',
-        title: '确认后留下记录',
-        detail: '在演示中确认任务，状态随之变化，操作记录也会同步更新。'
+        title: '状态确认自动留痕',
+        detail: '在本页确认示例任务后，项目待办状态与操作记录会实时同步更新，便于后续追溯。'
       }
     ],
-    scopeIntro:
-      '这是可交互的前端概念，可以切换视图并确认一项示例任务。真实业务接入、账号、数据存储与多人协作功能需要按实际需求开发。',
     scopes: [
-      { index: '01', title: '界面与信息架构', detail: '项目、任务与操作记录视图', status: '本页可体验', present: true },
-      { index: '02', title: '示例交互操作', detail: '切换视图、确认任务、同步状态', status: '本页可体验', present: true },
-      { index: '03', title: '真实数据与协作', detail: '账号体系、数据库保存与权限隔离', status: '实际项目开发', present: false },
-      { index: '04', title: '上线与维护', detail: '测试验收、部署及后续运维支持', status: '按合作约定', present: false }
+      { title: '界面架构与项目总览视图', detail: '项目进展卡片与我的待办任务列表', includedInDemo: true },
+      { title: '示例任务确认与留痕联动', detail: '页面内切换状态并实时同步操作动态', includedInDemo: true },
+      { title: '企业账号体系与数据存储', detail: '部门权限隔离、真实数据库持久化保存', includedInDemo: false },
+      { title: '现有工具对接与上线运维', detail: '系统测试验证、部署上线与操作交接', includedInDemo: false }
     ],
     tabs: [
       { id: 'overview', label: '项目总览' },
@@ -91,48 +76,36 @@ export const CONCEPTS: Record<ConceptId, ConceptSpec> = {
   },
   agent: {
     id: 'agent',
-    number: '02',
     name: '知间',
     subtitle: '知识 Agent',
-    english: 'KNOWLEDGE AGENT',
-    categoryTag: 'AI Agent 搭建',
+    categoryTag: 'AI Agent',
     filterCategory: 'agent',
     serviceKey: 'agent',
-    shortSummary: '切换 3 个典型团队问题，看看助手如何带出答案、对应原文来源以及权限边界提示。',
-    typeLabel: '企业知识 · 交互概念',
-    fieldsLabel: '场景设计 / 检索交互 / 前端原型',
-    contextTitle: '资料放在不同文件里，找答案要翻好几处。',
+    image: solutionAgentImg,
+    imageAlt: '企业知识库与智能检索 3D 视觉图',
+    shortSummary: '围绕企业确认可用的资料库进行问答，回答旁边直接关联可核对的制度原文出处。',
+    contextTitle: '制度与产品资料都在，问题却还是反复问',
     contextBody:
-      '制度、操作说明和团队资料多起来后，同一个问题可能需要反复查找，也要确认看到的是不是合适的版本。这个概念展示问题、参考回答与可核对来源如何放在一起。',
-    contextQuestion: '找到答案后，怎么核对出处？',
-    approachTitle: '回答旁边，放上可查看的来源。',
-    steps: [
+      '团队文档变多后，同事常找不到最新版规范，熟悉业务的人需要频繁停下来答疑。这个原型展示了如何让回答附带可溯源出处并强调权限边界。',
+    approachSteps: [
       {
-        index: '01',
-        tag: '01 / 资料范围',
-        title: '先确定能查哪些资料',
-        detail: '真实使用时，需要根据使用者身份确定可查范围，不能把无权查看的资料带入回答。'
+        title: '限定授权可查范围',
+        detail: '在真实落地系统中，助手严格依据员工岗位权限检索文档，绝不带入无权查看的资料。'
       },
       {
-        index: '02',
-        tag: '02 / 查看来源',
-        title: '回答和出处一起看',
-        detail: '展示对应资料和原文片段，让使用者核对来源、版本与上下文。'
+        title: '回答与原文并排核对',
+        detail: '每条预设回答下方附带对应制度名称、章节与版本号，点击即可跳转查看原文片段。'
       },
       {
-        index: '03',
-        tag: '03 / 人工确认',
-        title: '重要事项由人确认',
-        detail: '资料不够时提示继续核对；涉及业务承诺和重要决定时，交由负责人判断。'
+        title: '关键决策保留人工确认',
+        detail: '遇到资料依据不足时提示补充核对，涉及对外报价承诺或制度解释仍交由负责人把关。'
       }
     ],
-    scopeIntro:
-      '页面展示预设问题、参考回答和示例资料，尚未接入真实知识库、大模型接口或服务端权限校验。',
     scopes: [
-      { index: '01', title: '问答与引用展示', detail: '切换预设问题、回答与来源定位', status: '本页可体验', present: true },
-      { index: '02', title: '资料与边界说明', detail: '资料原文查看、权限范围示意', status: '本页可体验', present: true },
-      { index: '03', title: '知识库与模型接入', detail: '文档解析切片、检索调优与模型调用', status: '实际项目开发', present: false },
-      { index: '04', title: '账号与权限控制', detail: '组织身份认证、文档级别访问隔离', status: '实际项目开发', present: false }
+      { title: '多组业务问题问答切换', detail: '内置新同事入职、项目启动、报价变更 3 组示例', includedInDemo: true },
+      { title: '引用原文定位与权限说明', detail: '支持点击出处跳转至对应文档原文预览', includedInDemo: true },
+      { title: '知识库接入与大模型调优', detail: '文档解析切片、检索召回优化与模型调用', includedInDemo: false },
+      { title: '组织身份认证与文档权限隔离', detail: '按员工角色在服务端动态校验可见范围', includedInDemo: false }
     ],
     tabs: [
       { id: 'overview', label: '问答空间' },
@@ -143,48 +116,36 @@ export const CONCEPTS: Record<ConceptId, ConceptSpec> = {
   },
   workflow: {
     id: 'workflow',
-    number: '03',
     name: '有序',
     subtitle: '审批工作流',
-    english: 'WORKFLOW',
     categoryTag: '工作流自动化',
     filterCategory: 'workflow',
-    serviceKey: 'workflow',
-    shortSummary: '切换不同采购金额档位，逐步模拟申请进入规则判断与人工审批节点的过程。',
-    typeLabel: '采购审批 · 交互概念',
-    fieldsLabel: '流程梳理 / 规则设计 / 前端原型',
-    contextTitle: '申请发出去之后，不知道到了谁手里。',
+    serviceKey: 'automation',
+    image: solutionWorkflowImg,
+    imageAlt: '企业自动化审批与流程路由 3D 视觉图',
+    shortSummary: '按预设金额与条件自动分发审批路径，支持多档金额流转模拟与执行记录查看。',
+    contextTitle: '申请发出去之后，不知道到了谁手里',
     contextBody:
-      '采购申请有时在群里提出，再手动登记、转交。这个概念用不同金额的示例申请展示规则判断、审批路径和处理记录，让申请人随时知道当前停在哪一步。',
-    contextQuestion: '这笔申请交给谁，现在进行到哪一步？',
-    approachTitle: '按金额找到负责人，把经过记录下来。',
-    steps: [
+      '常规采购或业务申请如果在群里手工登记转交，很容易遗漏或延误。这个原型展示了从材料校验、金额路由判断到抵达人工审批节点的完整流转。',
+    approachSteps: [
       {
-        index: '01',
-        tag: '01 / 检查申请',
-        title: '先检查申请信息',
-        detail: '看看金额和材料是否齐全，缺少时先请申请人补充。'
+        title: '先校验必填材料完整性',
+        detail: '收到申请后首先检查金额、事由与凭证是否齐全，信息缺失时提前提示补充。'
       },
       {
-        index: '02',
-        tag: '02 / 审批路径',
-        title: '按金额选择路径',
-        detail: '用示例金额展示不同审批路径；真实规则需要根据组织实际制度确认。'
+        title: '按规则匹配审批人路径',
+        detail: '在演示中可切换小额与大额两档金额，观察系统如何分别匹配部门负责人或财务负责人。'
       },
       {
-        index: '03',
-        tag: '03 / 处理记录',
-        title: '查看流转到哪一步',
-        detail: '演示提交、规则判断和等待审批的过程；实际使用还需接入消息通知与异常处理。'
+        title: '推进留痕且不越权代批',
+        detail: '每一步判断自动记录日志供随时查看，流程送达审批节点后仍交由负责人作出审批决定。'
       }
     ],
-    scopeIntro:
-      '可以在本页切换示例金额并逐步模拟流转到人工审批节点。操作仅改变当前页面状态，不会发送真实通知或连接外部系统。',
     scopes: [
-      { index: '01', title: '流程画布与分支', detail: '申请提交、金额判断与审批节点', status: '本页可体验', present: true },
-      { index: '02', title: '多档金额模拟', detail: '切换金额档位、查看同步流转记录', status: '本页可体验', present: true },
-      { index: '03', title: '真实审批与通知', detail: '企业微信/钉钉集成、组织架构同步', status: '实际项目开发', present: false },
-      { index: '04', title: '异常与撤回处理', detail: '退回补充、撤回、重试与超时提醒', status: '实际项目开发', present: false }
+      { title: '两档采购金额路径切换', detail: '对比 ¥3,200 与 ¥12,800 的不同流转路由', includedInDemo: true },
+      { title: '分步模拟推进与日志同步', detail: '完整体验提交、校验、路由与抵达审批节点', includedInDemo: true },
+      { title: 'IM 通知与业务系统对接', detail: '企业微信/钉钉消息推送及组织架构同步', includedInDemo: false },
+      { title: '退回、撤回与异常重试', detail: '覆盖真实生产中的各类审批异常分支', includedInDemo: false }
     ],
     tabs: [
       { id: 'overview', label: '流程画布' },
