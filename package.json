@@ -1,0 +1,21 @@
+{
+  "name": "dingxinglizi-ideas",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "description": "栗子软件科技官网（定兴县栗子软件科技店）— 企业软件开发、AI Agent 搭建、工作流自动化与网站搭建",
+  "scripts": {
+    "dev": "vite",
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "node scripts/check-dist.mjs dist"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.0",
+    "@types/node": "^26.6.6",
+    "tailwindcss": "^4.1.0",
+    "typescript": "^5.8.0",
+    "vite": "^6.2.0"
+  }
+}

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta
+      name="description"
+      content="栗子软件科技的自主交互概念演示：运营工作台、知识 Agent 与审批工作流。内置示例数据，可直观体验交互操作与实际项目边界。"
+    />
+    <title>方案演示 — 栗子软件科技</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <script type="module" src="./src/pages/work.ts"></script>
+  </head>
+  <body class="bg-white text-slate-900 antialiased">
+    <!-- SITE_HEADER -->
+
+    <main id="main" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16 lg:pt-12 lg:pb-20">
+      <!-- 紧凑标题区：桌面首屏即可直达方案卡片 -->
+      <section aria-labelledby="work-title" class="pb-8 border-b border-slate-200">
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          <div class="max-w-2xl">
+            <div class="inline-flex items-center gap-2 text-xs font-semibold text-blue-700">
+              <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+              <span>交互概念演示 · 01 — 03</span>
+            </div>
+            <h1 id="work-title" class="mt-2.5 text-3xl sm:text-4xl font-bold tracking-tight text-slate-950 leading-tight">
+              项目怎么管、资料怎么查、流程怎么跑。
+            </h1>
+            <p class="mt-3 text-sm sm:text-base text-slate-600 leading-relaxed">
+              以下是我们自主设计的前端交互原型，内置示例数据，点进即可体验界面操作逻辑与实际项目交付边界（非客户案例）。
+            </p>
+          </div>
+
+          <div class="flex items-center gap-3 shrink-0">
+            <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 border border-slate-200 text-xs font-medium text-slate-600">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+              <span>自主设计概念 · 支持页面内试用</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- 分类筛选栏 -->
+        <div class="mt-6 flex flex-wrap items-center justify-between gap-4">
+          <div class="flex flex-wrap items-center gap-2" role="group" aria-label="按业务方向筛选">
+            <button
+              type="button"
+              data-filter="all"
+              aria-pressed="true"
+              class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors bg-blue-700 text-white shadow-xs"
+            >
+              全部方案 <span class="ml-1 opacity-80 tabular-nums">03</span>
+            </button>
+            <button
+              type="button"
+              data-filter="software"
+              aria-pressed="false"
+              class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors bg-slate-100 text-slate-700 hover:bg-slate-200/80"
+            >
+              企业软件开发 <span class="ml-1 opacity-75 tabular-nums">01</span>
+            </button>
+            <button
+              type="button"
+              data-filter="agent"
+              aria-pressed="false"
+              class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors bg-slate-100 text-slate-700 hover:bg-slate-200/80"
+            >
+              AI Agent 搭建 <span class="ml-1 opacity-75 tabular-nums">01</span>
+            </button>
+            <button
+              type="button"
+              data-filter="workflow"
+              aria-pressed="false"
+              class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors bg-slate-100 text-slate-700 hover:bg-slate-200/80"
+            >
+              工作流自动化 <span class="ml-1 opacity-75 tabular-nums">01</span>
+            </button>
+          </div>
+          <p id="work-count" aria-live="polite" class="text-xs font-mono font-medium text-slate-500">当前显示 03 个方案</p>
+        </div>
+      </section>
+
+      <!-- 方案演示卡片列表 -->
+      <section aria-label="交互概念列表" class="mt-8">
+        <div id="work-cards-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-6"></div>
+        <p id="work-empty" hidden class="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-10 text-center text-sm text-slate-600">
+          暂无匹配的演示方案，请切换到其他方向查看。
+        </p>
+      </section>
+
+      <!-- 底部转化引导（统一指向 about.html#project-brief） -->
+      <section aria-labelledby="work-cta-title" class="mt-14 rounded-2xl border border-slate-200 bg-slate-50 p-6 sm:p-9 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+          <p class="text-xs font-semibold tracking-wider text-blue-700 uppercase">需求沟通</p>
+          <h2 id="work-cta-title" class="mt-1.5 text-xl sm:text-2xl font-bold text-slate-950">
+            有类似场景想改善？从现在怎么做事聊起。
+          </h2>
+          <p class="mt-2 text-sm text-slate-600">
+            可以把正在用的表格、截图或日常痛点写进需求简报，我们一起评估最轻量的做法。
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-3 shrink-0">
+          <a
+            href="about.html#project-brief"
+            class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold transition-colors"
+          >
+            <span>整理需求简报</span>
+            <span aria-hidden="true">→</span>
+          </a>
+          <a
+            href="capabilities.html"
+            class="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 text-sm font-semibold transition-colors"
+          >
+            <span>查看服务与验收</span>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <!-- SITE_FOOTER -->
+  </body>
+</html>

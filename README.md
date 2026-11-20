@@ -1,35 +1,44 @@
-# 栗子软件科技
+# 栗子软件科技官网（定兴县栗子软件科技店）
 
-企业软件、AI Agent 与工作流自动化的多页品牌网站。
+企业软件开发、AI Agent 搭建、工作流自动化与网站搭建服务官网。
 
-公开地址：https://lizi-product-studio.github.io/dingxinglizi-ideas/
+线上地址：<https://lizi-product-studio.github.io/dingxinglizi-ideas/>
 
-## 页面
+## 技术架构
 
-- 首页：数字系统主视觉、精选作品与能力入口。
-- 作品：三个明确标注的产品概念演示及分类筛选。
-- 项目详情：运营工作台、知识 Agent、审批工作流的交互演示。
-- 能力：可逐步探索的业务流程示意。
-- 实验室：支持鼠标、触屏与键盘的三维线场。
-- 关于与合作：联系方式与本地项目简报生成。
+- **Vite + TypeScript + Tailwind CSS v4** 多页静态应用（MPA）
+- 构建配置 `base: './'`，兼容 GitHub Pages 子路径发布，不依赖运行期后端或 CDN
+- 共享 Header / Footer 通过 [vite.config.ts](vite.config.ts) 在开发和构建期直接注入 HTML，避免首屏闪烁
+- 字体资产使用本地打包的 Manrope 字体（许可见 `src/assets/fonts/manrope.OFL.txt`）
 
-所有概念项目、模拟界面与流程数据均为演示，不代表客户项目、实际业务成果或真实 AI 服务。项目简报在浏览器本地生成，通过复制交给用户，不会自动发送。
+## 页面结构
 
-## 本地运行
+- `index.html`：首页（清晰中文价值主张、系统联动预览、日常场景、交互概念入口与合作方式）
+- `work.html`：方案演示总览（支持按方向筛选：企业软件开发 / AI Agent 搭建 / 工作流自动化）
+- `project.html`：交互概念演示详情（序章·运营工作台、知间·知识 Agent、有序·审批工作流）
+- `capabilities.html`：服务与交付（4 步交互式业务场景拆解、四项服务清单与验收原则）
+- `about.html`：关于与合作（经营主体、合作原则与流程、常见问题、本地需求简报生成与联系方式）
 
-```sh
-python -m http.server 4188 --directory web
-```
-
-打开 http://localhost:4188/ 。无构建步骤，无运行时网络依赖。
+## 本地开发与构建验证
 
 ```sh
-node scripts/check-site.mjs web
+# 安装依赖
+npm install
+
+# 本地开发预览
+npm run dev
+
+# 类型检查 + 构建 + 产物静态校验
+npm run typecheck
+npm run build
+npm run check
+
+# 本地预览构建产物
+npm run preview
 ```
 
-推送 main 后，GitHub Actions 检查页面资源与 JavaScript 语法并发布 web/ 到 GitHub Pages。
+在 Windows PowerShell 中如遇执行策略限制，可改用 `npm.cmd` 与 `npx.cmd`。
 
-网站使用本地 Manrope 字体，字体许可见 web/assets/manrope.OFL.txt。动画由 CSS 与原生 JavaScript 实现。
+## 自动部署
 
-本次官网替换以前的项目规划工具；旧代码可通过 Git 历史恢复。
-
+推送至 `main` 分支后，GitHub Actions（`.github/workflows/pages.yml`）会自动运行 `npm ci`、`npm run typecheck`、`npm run build`、`npm run check`，并将 `dist/` 发布到 GitHub Pages。

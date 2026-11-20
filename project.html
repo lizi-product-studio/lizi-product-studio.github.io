@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta
+      name="description"
+      content="交互概念体验：序章·运营工作台、知间·知识 Agent 与有序·审批工作流。自主前端概念演示，帮助直观了解信息结构、界面操作与真实交付边界。"
+    />
+    <title>交互概念演示 — 栗子软件科技</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <script type="module" src="./src/pages/project.ts"></script>
+  </head>
+  <body class="bg-white text-slate-900 antialiased">
+    <!-- SITE_HEADER -->
+
+    <main id="main" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-16 lg:pt-10 lg:pb-20">
+      <!-- 紧凑面包屑与方案快速切换条 -->
+      <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-slate-200">
+        <a href="work.html" class="inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-blue-700 transition-colors">
+          <span aria-hidden="true">←</span>
+          <span>返回全部方案</span>
+        </a>
+
+        <div id="project-switcher" class="flex flex-wrap items-center gap-1.5" role="group" aria-label="切换概念演示">
+          <button type="button" data-concept-switch="operations" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors bg-blue-700 text-white">01 序章 · 运营工作台</button>
+          <button type="button" data-concept-switch="agent" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors bg-slate-100 text-slate-700 hover:bg-slate-200">02 知间 · 知识 Agent</button>
+          <button type="button" data-concept-switch="workflow" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors bg-slate-100 text-slate-700 hover:bg-slate-200">03 有序 · 审批工作流</button>
+        </div>
+      </div>
+
+      <!-- 方案标题与元信息 -->
+      <section aria-labelledby="project-title" class="pt-6 pb-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end">
+          <div class="lg:col-span-8">
+            <div class="flex flex-wrap items-center gap-2.5 text-xs">
+              <span id="project-number" class="px-2.5 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200 font-semibold">交互概念 01 / 03</span>
+              <span id="project-category" class="font-medium text-slate-500">企业软件开发</span>
+              <span class="text-slate-300">|</span>
+              <span class="text-slate-500">自主设计前端原型 · 内置示例数据</span>
+            </div>
+            <h1 id="project-title" class="mt-3 text-3xl sm:text-4xl font-bold tracking-tight text-slate-950">
+              序章 · 运营工作台
+            </h1>
+            <p id="project-description" class="mt-3 text-base text-slate-600 leading-relaxed max-w-2xl"></p>
+          </div>
+
+          <div class="lg:col-span-4 grid grid-cols-2 gap-3 text-xs">
+            <div class="rounded-xl bg-slate-50 border border-slate-200/80 p-3.5">
+              <p class="text-slate-500">概念定位</p>
+              <p id="project-type" class="mt-1 font-semibold text-slate-900"></p>
+            </div>
+            <div class="rounded-xl bg-slate-50 border border-slate-200/80 p-3.5">
+              <p class="text-slate-500">覆盖内容</p>
+              <p id="project-fields" class="mt-1 font-semibold text-slate-900"></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 交互演示工作台主窗口（首屏直接可见） -->
+      <section id="experience" aria-label="交互演示工作台" class="rounded-2xl border border-slate-200 bg-slate-50/70 p-3 sm:p-5 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2 px-2 pb-3 text-xs text-slate-600">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span class="font-semibold text-slate-800">交互演示窗口</span>
+            <span class="hidden sm:inline text-slate-400">·</span>
+            <span class="hidden sm:inline text-slate-500">可直接点击切换视图与示例按钮</span>
+          </div>
+          <span class="text-[11px] font-medium text-slate-500">仅本地页面状态演示，不连接外部系统</span>
+        </div>
+
+        <div class="rounded-xl border border-slate-200 bg-white overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[460px]">
+          <!-- 左侧/顶部演示侧栏 -->
+          <aside class="lg:col-span-3 bg-slate-50/90 border-b lg:border-b-0 lg:border-r border-slate-200 p-4 flex flex-col justify-between gap-4">
+            <div>
+              <div class="flex items-center justify-between gap-2 pb-3 border-b border-slate-200/80">
+                <div class="flex items-center gap-2.5">
+                  <span id="demo-brand-icon" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-700 text-white text-sm font-bold">序</span>
+                  <div>
+                    <p id="demo-brand-name" class="text-sm font-bold text-slate-950 leading-none">序章</p>
+                    <p id="demo-brand-en" class="mt-1 text-[10px] font-mono text-slate-500 tracking-wider">OPERATIONS</p>
+                  </div>
+                </div>
+                <span class="px-2 py-0.5 rounded bg-white border border-slate-200 text-[10px] font-medium text-slate-600">示例空间</span>
+              </div>
+
+              <div id="demo-tabs" role="tablist" aria-label="产品演示视图" class="mt-3 grid grid-cols-3 lg:grid-cols-1 gap-1.5"></div>
+            </div>
+
+            <div class="hidden lg:block space-y-3 pt-4 border-t border-slate-200/80">
+              <div class="rounded-lg bg-white border border-slate-200/80 p-3 text-xs">
+                <p class="font-semibold text-slate-800">仅供概念演示</p>
+                <p class="mt-1 text-[11px] text-slate-500 leading-relaxed">当前页面使用内置示例数据，刷新后恢复默认状态。</p>
+              </div>
+              <div class="flex items-center gap-2.5 px-1">
+                <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-slate-200 text-slate-700 text-xs font-bold">LC</span>
+                <div class="text-xs">
+                  <p class="font-semibold text-slate-900">林澈</p>
+                  <p class="text-[11px] text-slate-500">示例演示账号</p>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          <!-- 右侧演示内容区 -->
+          <div class="lg:col-span-9 flex flex-col">
+            <div class="px-4 sm:px-6 py-3 border-b border-slate-200/80 flex items-center justify-between gap-2 text-xs text-slate-500 bg-white">
+              <span id="demo-breadcrumb" class="font-medium text-slate-700">演示空间 / 项目总览</span>
+              <span class="inline-flex items-center gap-2 text-[11px] text-slate-400">
+                <span>视图切换</span>
+                <span aria-hidden="true">·</span>
+                <span class="font-mono">DEMO</span>
+              </span>
+            </div>
+            <div id="demo-view" role="tabpanel" tabindex="0" aria-live="polite" class="p-4 sm:p-6 flex-1"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 场景拆解：业务出发点 / 设计思路 / 演示边界与实际交付 -->
+      <div class="mt-14 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
+        <!-- 左侧章节导航 -->
+        <aside class="lg:col-span-3">
+          <div class="lg:sticky lg:top-24 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">方案解读</p>
+            <nav aria-label="概念解读章节" class="mt-3 flex flex-row lg:flex-col flex-wrap gap-1.5">
+              <a href="#context" class="chapter-link px-3 py-2 rounded-lg text-xs sm:text-sm font-medium text-slate-700 hover:bg-white hover:text-blue-700 transition-colors">01 · 业务出发点</a>
+              <a href="#approach" class="chapter-link px-3 py-2 rounded-lg text-xs sm:text-sm font-medium text-slate-700 hover:bg-white hover:text-blue-700 transition-colors">02 · 设计思路</a>
+              <a href="#scope" class="chapter-link px-3 py-2 rounded-lg text-xs sm:text-sm font-medium text-slate-700 hover:bg-white hover:text-blue-700 transition-colors">03 · 演示边界与交付</a>
+              <a href="#experience" class="px-3 py-2 rounded-lg text-xs sm:text-sm font-medium text-blue-700 hover:bg-white transition-colors">↑ 回到交互窗口</a>
+            </nav>
+          </div>
+        </aside>
+
+        <!-- 右侧说明正文 -->
+        <div class="lg:col-span-9 space-y-12">
+          <section id="context" class="story-section scroll-mt-24 pb-10 border-b border-slate-200">
+            <p class="text-xs font-semibold tracking-wider text-blue-700 uppercase">01 / 业务出发点</p>
+            <h2 id="context-title" class="mt-2 text-2xl sm:text-3xl font-bold text-slate-950"></h2>
+            <p id="context-copy" class="mt-4 text-base text-slate-600 leading-relaxed max-w-3xl"></p>
+            <div class="mt-6 rounded-xl bg-blue-50/70 border border-blue-200/80 p-5">
+              <p class="text-xs font-semibold text-blue-800">核心设计问题</p>
+              <blockquote id="context-question" class="mt-1.5 text-lg sm:text-xl font-bold text-slate-950"></blockquote>
+            </div>
+          </section>
+
+          <section id="approach" class="story-section scroll-mt-24 pb-10 border-b border-slate-200">
+            <p class="text-xs font-semibold tracking-wider text-blue-700 uppercase">02 / 设计思路</p>
+            <h2 id="approach-title" class="mt-2 text-2xl sm:text-3xl font-bold text-slate-950"></h2>
+            <div id="approach-steps" class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+          </section>
+
+          <section id="scope" class="story-section scroll-mt-24">
+            <p class="text-xs font-semibold tracking-wider text-blue-700 uppercase">03 / 演示边界与实际交付</p>
+            <h2 class="mt-2 text-2xl sm:text-3xl font-bold text-slate-950">现在可以在页面试什么，落地项目需要做什么。</h2>
+            <p id="scope-copy" class="mt-3 text-sm sm:text-base text-slate-600 leading-relaxed max-w-3xl"></p>
+            <div id="scope-list" class="mt-6 divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white overflow-hidden"></div>
+            <p class="mt-4 text-xs text-slate-500">
+              说明：以上界面、人物与示例任务均为栗子软件科技自主设计的概念演示，非真实客户生产环境数据。
+            </p>
+          </section>
+        </div>
+      </div>
+
+      <!-- 咨询引导与下一个方案 -->
+      <section aria-labelledby="project-consult-title" class="mt-14 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-7 rounded-2xl bg-slate-900 text-white p-6 sm:p-8 flex flex-col justify-between gap-6">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-blue-300">项目沟通</p>
+            <h2 id="project-consult-title" class="mt-2 text-2xl font-bold">你的团队也有类似的工作要理顺？</h2>
+            <p class="mt-2.5 text-sm text-slate-300 leading-relaxed">
+              点击右侧带出当前方案作为沟通参考，填写现在的做法和痛点即可，无需准备复杂文档。
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-3">
+            <a
+              id="project-brief-link"
+              href="about.html?service=software&project=operations#project-brief"
+              class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold transition-colors"
+            >
+              <span>基于此方向聊聊需求</span>
+              <span aria-hidden="true">→</span>
+            </a>
+            <a href="about.html#contact-details" class="text-sm font-medium text-slate-300 hover:text-white px-2 py-2">
+              直接联系我们 ↗
+            </a>
+          </div>
+        </div>
+
+        <a
+          id="next-project-link"
+          href="project.html?project=agent"
+          class="lg:col-span-5 group rounded-2xl border border-slate-200 bg-slate-50 hover:bg-white hover:border-blue-300 p-6 sm:p-8 flex flex-col justify-between transition-all"
+        >
+          <div>
+            <span class="text-xs font-semibold text-blue-700">下一个方案 / 02</span>
+            <h3 id="next-project-title" class="mt-2 text-2xl font-bold text-slate-950 group-hover:text-blue-700 transition-colors">
+              知间 · 知识 Agent
+            </h3>
+            <p id="next-project-copy" class="mt-2 text-sm text-slate-600 leading-relaxed"></p>
+          </div>
+          <div class="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700">
+            <span>前往体验</span>
+            <span aria-hidden="true" class="group-hover:translate-x-0.5 transition-transform">→</span>
+          </div>
+        </a>
+      </section>
+    </main>
+
+    <!-- SITE_FOOTER -->
+  </body>
+</html>
