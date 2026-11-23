@@ -80,8 +80,8 @@ export function enhanceInteractiveButtons(root: ParentNode = document): void {
       el.classList.add('btn-fx-secondary');
     }
 
-    // 桌面精细指针下的轻磁吸跟随效果
-    if (window.matchMedia('(pointer: fine)').matches) {
+    // 桌面精细指针下的轻磁吸跟随效果（排除绝对定位悬浮按钮）
+    if (window.matchMedia('(pointer: fine)').matches && !cls.includes('absolute') && !cls.includes('fixed')) {
       el.addEventListener('pointermove', (event) => {
         const rect = el.getBoundingClientRect();
         if (rect.width > 360) return; // 超宽通栏按钮不做位移
@@ -180,7 +180,7 @@ export function enhanceCardsAndTilt(root: ParentNode = document): void {
  */
 export function initScrollReveals(): void {
   const targets = document.querySelectorAll<HTMLElement>(
-    'main > section h2, #home-services-grid > div, #home-process-list > li, #services-zig-zag > section .grid > div, #guarantees-grid > div, #work-cards-grid > article, #about-principles-grid > div, #approach-steps > div'
+    '#home-services-grid > div, #home-process-list > li, #services-zig-zag > section .grid > div, #guarantees-grid > div, #work-cards-grid > article, #about-principles-grid > div, #approach-steps > div'
   );
 
   if (!('IntersectionObserver' in window)) return;
@@ -194,21 +194,19 @@ export function initScrollReveals(): void {
         }
       });
     },
-    { threshold: 0.08, rootMargin: '0px 0px -20px 0px' }
+    { threshold: 0.02, rootMargin: '0px 0px 80px 0px' }
   );
 
   targets.forEach((el, index) => {
     if (el.dataset.revealReady === 'true') return;
     el.dataset.revealReady = 'true';
-    const staggerMs = (index % 4) * 70;
+    const staggerMs = (index % 4) * 65;
     el.style.setProperty('--reveal-delay', `${staggerMs}ms`);
     el.classList.add('reveal-item');
 
     const rect = el.getBoundingClientRect();
-    if (rect.top < window.innerHeight && rect.bottom > 0) {
-      window.requestAnimationFrame(() => {
-        el.classList.add('is-revealed');
-      });
+    if (rect.top < window.innerHeight + 80 && rect.bottom > 0) {
+      el.classList.add('is-revealed');
     } else {
       observer.observe(el);
     }
