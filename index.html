@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#03050c" />
     <meta
       name="description"
       content="栗子软件科技（定兴县栗子软件科技店）专注企业软件开发、AI Agent 搭建、工作流自动化与企业官网建设，让企业日常流程更清晰高效。"
@@ -12,91 +12,127 @@
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <script type="module" src="./src/pages/home.ts"></script>
   </head>
-  <body class="bg-white text-slate-900 antialiased">
+  <body class="bg-[#03050c] text-slate-100 antialiased">
     <!-- SITE_HEADER -->
 
     <main id="main">
-      <!-- Hero 首屏：左侧核心价值主张 + 右侧四大核心业务自动轮播画廊 -->
-      <section id="home-hero-section" aria-labelledby="home-hero-title" class="hero-interactive-bg bg-gradient-to-b from-[#F5F8FD] via-white to-white">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16 lg:pt-16 lg:pb-24">
+      <!-- Hero 首屏：Lusion 3D 粒子变形舞台 + Framer 3D Coverflow 激光流光轮播 -->
+      <section id="home-hero-section" aria-labelledby="home-hero-title" class="relative overflow-hidden">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16 lg:pt-18 lg:pb-22">
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             <div class="lg:col-span-5">
-              <p class="text-sm font-semibold text-blue-600">栗子软件科技 · 软件设计与智能化服务</p>
-              <h1 id="home-hero-title" class="mt-4 text-[28px] sm:text-4xl lg:text-[36px] font-bold tracking-tight text-slate-950 leading-[1.24]">
-                企业软件与 AI 自动化，<br />让业务运转更清晰高效。
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-sky-400/30 text-sky-300 text-xs font-semibold backdrop-blur-md">
+                <span class="w-1.5 h-1.5 rounded-full bg-sky-400 animate-ping"></span>
+                <span>栗子软件科技 · 软件设计与智能化工程</span>
+              </div>
+
+              <h1 id="home-hero-title" class="mt-5 text-[28px] sm:text-4xl lg:text-[36px] font-bold tracking-tight text-white leading-[1.24]">
+                企业软件与 AI 自动化，<br />
+                <span class="bg-gradient-to-r from-sky-300 via-blue-400 to-indigo-300 bg-clip-text text-transparent">让业务运转更清晰高效。</span>
               </h1>
-              <p class="mt-5 text-base sm:text-lg text-slate-600 leading-relaxed">
+
+              <p class="mt-5 text-base sm:text-lg text-slate-300/90 leading-relaxed">
                 聚焦企业管理软件定制、AI 知识助手、工作流自动化与品牌官网建设。从每天实际遇到的繁琐环节切入，打造团队顺手好用的工具。
               </p>
 
               <div class="mt-8 flex flex-wrap items-center gap-3.5">
                 <a
                   href="about.html#contact"
-                  class="inline-flex items-center justify-center px-6 py-3.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-colors"
+                  class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-blue-600 text-white text-sm font-semibold transition-all"
                 >
-                  预约需求沟通
+                  <span>预约需求沟通</span>
+                  <span aria-hidden="true">→</span>
                 </a>
                 <a
                   href="capabilities.html"
-                  class="inline-flex items-center justify-center px-6 py-3.5 rounded-lg bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-sm font-semibold transition-colors"
+                  class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-slate-900/80 hover:bg-slate-800/90 text-slate-200 border border-slate-700/80 text-sm font-semibold backdrop-blur-md transition-all"
                 >
-                  了解核心服务
+                  <span>了解核心服务</span>
                 </a>
+              </div>
+
+              <!-- 实时 3D 粒子场形态状态指示 -->
+              <div class="mt-8 pt-5 border-t border-slate-800/80 flex items-center gap-3 text-xs text-slate-400">
+                <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-700 font-mono text-[10px] text-sky-400">3D FIELD</span>
+                <span id="particle-form-status" class="font-mono text-slate-300">粒子拓扑：01 // 三维架构矩阵</span>
               </div>
             </div>
 
-            <!-- 右侧：四大核心业务自动轮播画廊 -->
+            <!-- 右侧：1px 旋转激光流光边框 + 3D Coverflow 景深轮播画廊 -->
             <div class="lg:col-span-7">
-              <div
-                id="hero-carousel"
-                aria-roledescription="carousel"
-                aria-label="四大核心业务展示轮播"
-                class="rounded-2xl bg-white border border-slate-200/80 shadow-[0_24px_60px_-15px_rgba(15,23,42,0.10)] overflow-hidden select-none"
-              >
-                <!-- 轮播主画面视口 -->
-                <div id="hero-carousel-viewport" class="relative aspect-video bg-[#F4F7FB] overflow-hidden"></div>
-
-                <!-- 轮播当前帧文字说明条 -->
-                <div id="hero-carousel-caption" aria-live="polite" class="px-5 py-4 sm:px-6 sm:py-5 bg-white border-t border-slate-100"></div>
-
-                <!-- 底部 4 项读秒进度条与指示器切换栏 -->
+              <div class="laser-border rounded-2xl p-[1px] shadow-[0_30px_90px_-15px_rgba(37,99,235,0.35)]">
                 <div
-                  id="hero-carousel-tabs"
-                  role="tablist"
-                  aria-label="切换核心业务轮播项"
-                  class="grid grid-cols-4 bg-[#F7F9FC] border-t border-slate-200/80 divide-x divide-slate-200/70"
-                ></div>
+                  id="hero-carousel"
+                  aria-roledescription="carousel"
+                  aria-label="四大核心业务展示轮播"
+                  class="laser-border-inner rounded-[15px] overflow-hidden select-none"
+                >
+                  <!-- 3D Coverflow 视口 -->
+                  <div id="hero-carousel-viewport" class="coverflow-viewport relative aspect-video bg-[#070B18] overflow-hidden"></div>
+
+                  <!-- 当前帧文字说明条 -->
+                  <div id="hero-carousel-caption" aria-live="polite" class="px-5 py-4 sm:px-6 sm:py-5 bg-[#080C1A]/95 border-t border-slate-800/80"></div>
+
+                  <!-- 底部 4 项读秒激光进度条与指示器切换栏 -->
+                  <div
+                    id="hero-carousel-tabs"
+                    role="tablist"
+                    aria-label="切换核心业务轮播项"
+                    class="grid grid-cols-4 bg-[#050813] border-t border-slate-800/80 divide-x divide-slate-800/80"
+                  ></div>
+                </div>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- Framer 风格无限流光能力跑马灯 (Infinite Capability Marquee) -->
+        <div aria-label="核心交付能力流" class="border-y border-slate-800/80 bg-[#050814]/85 backdrop-blur-md py-3.5 overflow-hidden">
+          <div class="marquee-track items-center gap-8 text-xs sm:text-sm font-medium text-slate-300">
+            <span class="inline-flex items-center gap-2.5 px-3"><i class="w-1.5 h-1.5 rounded-full bg-sky-400"></i>企业订单与项目协同后台</span>
+            <span class="inline-flex items-center gap-2.5 px-3"><i class="w-1.5 h-1.5 rounded-full bg-indigo-400"></i>RAG 知识库问答 AI Agent</span>
+            <span class="inline-flex items-center gap-2.5 px-3"><i class="w-1.5 h-1.5 rounded-full bg-emerald-400"></i>多条件采购审批自动化流转</span>
+            <span class="inline-flex items-center gap-2.5 px-3"><i class="w-1.5 h-1.5 rounded-full bg-blue-400"></i>高转化响应式品牌官网</span>
+            <span class="inline-flex items-center gap-2.5 px-3"><i class="w-1.5 h-1.5 rounded-full bg-purple-400"></i>现有 Excel 与企业微信渐进打通</span>
+            <span class="inline-flex items-center gap-2.5 px-3"><i class="w-1.5 h-1.5 rounded-full bg-sky-400"></i>真实业务样本联合验收交接</span>
+            <!-- 无缝循环镜像副本 -->
+            <span aria-hidden="true" class="inline-flex items-center gap-2.5 px-3"><i class="w-1.5 h-1.5 rounded-full bg-sky-400"></i>企业订单与项目协同后台</span>
+            <span aria-hidden="true" class="inline-flex items-center gap-2.5 px-3"><i class="w-1.5 h-1.5 rounded-full bg-indigo-400"></i>RAG 知识库问答 AI Agent</span>
+            <span aria-hidden="true" class="inline-flex items-center gap-2.5 px-3"><i class="w-1.5 h-1.5 rounded-full bg-emerald-400"></i>多条件采购审批自动化流转</span>
+            <span aria-hidden="true" class="inline-flex items-center gap-2.5 px-3"><i class="w-1.5 h-1.5 rounded-full bg-blue-400"></i>高转化响应式品牌官网</span>
+            <span aria-hidden="true" class="inline-flex items-center gap-2.5 px-3"><i class="w-1.5 h-1.5 rounded-full bg-purple-400"></i>现有 Excel 与企业微信渐进打通</span>
+            <span aria-hidden="true" class="inline-flex items-center gap-2.5 px-3"><i class="w-1.5 h-1.5 rounded-full bg-sky-400"></i>真实业务样本联合验收交接</span>
+          </div>
+        </div>
       </section>
 
-      <!-- 核心服务：四列清爽无边框网格 -->
-      <section aria-labelledby="home-services-heading" class="py-16 lg:py-24 bg-white border-t border-slate-100">
+      <!-- 核心服务：全息 3D 棱镜折射卡片网格 -->
+      <section aria-labelledby="home-services-heading" class="py-16 lg:py-24">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="max-w-2xl mx-auto text-center">
-            <h2 id="home-services-heading" class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-950">
+            <p class="text-xs font-mono uppercase tracking-widest text-sky-400">CORE CAPABILITIES // 01 — 04</p>
+            <h2 id="home-services-heading" class="mt-2.5 text-2xl sm:text-3xl font-bold tracking-tight text-white">
               围绕企业真实业务场景的四项服务
             </h2>
-            <p class="mt-3 text-sm sm:text-base text-slate-600">
+            <p class="mt-3 text-sm sm:text-base text-slate-400">
               无需推翻原有工具，按实际需要组合或从单一痛点环节切入。
             </p>
           </div>
 
-          <div id="home-services-grid" class="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10"></div>
+          <div id="home-services-grid" class="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
         </div>
       </section>
 
-      <!-- 典型业务场景：干净 Tab 切换 + 宽敞单层图文展示 -->
-      <section aria-labelledby="home-scenarios-heading" class="py-16 lg:py-24 bg-[#F7F9FC]">
+      <!-- 典型业务场景：自动读秒轮播 + 全息双栏画布 -->
+      <section aria-labelledby="home-scenarios-heading" class="py-16 lg:py-24 border-y border-slate-800/70 bg-[#050814]/60">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="max-w-2xl mx-auto text-center">
-            <h2 id="home-scenarios-heading" class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-950">
+            <p class="text-xs font-mono uppercase tracking-widest text-sky-400">INTERACTIVE SCENARIOS</p>
+            <h2 id="home-scenarios-heading" class="mt-2.5 text-2xl sm:text-3xl font-bold tracking-tight text-white">
               把重复沟通与手工对齐，交给清晰的软件流程
             </h2>
-            <p class="mt-3 text-sm sm:text-base text-slate-600">
-              选择一个常见业务场景，了解具体解决思路并体验对应在线原型。
+            <p class="mt-3 text-sm sm:text-base text-slate-400">
+              自动轮播或点击切换常见业务场景，了解解决思路并直接体验在线原型。
             </p>
           </div>
 
@@ -108,11 +144,11 @@
               aria-selected="true"
               aria-controls="home-scenario-panel"
               data-scene-tab="operations"
-              class="relative overflow-hidden px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors bg-blue-600 text-white"
+              class="relative overflow-hidden px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-blue-600 text-white"
             >
               <span>运营与订单协同</span>
               <span aria-hidden="true" class="absolute inset-x-0 bottom-0 h-[3px] bg-white/25">
-                <span data-scene-progress="operations" class="block h-full bg-white origin-left" style="transform: scaleX(0)"></span>
+                <span data-scene-progress="operations" class="block h-full bg-sky-300 origin-left" style="transform: scaleX(0)"></span>
               </span>
             </button>
             <button
@@ -123,11 +159,11 @@
               aria-controls="home-scenario-panel"
               tabindex="-1"
               data-scene-tab="agent"
-              class="relative overflow-hidden px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors bg-white text-slate-700 hover:bg-slate-100 border border-slate-200"
+              class="relative overflow-hidden px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-slate-900/90 text-slate-300 hover:text-white border border-slate-700/80"
             >
               <span>企业知识问答 AI</span>
               <span aria-hidden="true" class="absolute inset-x-0 bottom-0 h-[3px] bg-transparent">
-                <span data-scene-progress="agent" class="block h-full bg-white origin-left" style="transform: scaleX(0)"></span>
+                <span data-scene-progress="agent" class="block h-full bg-sky-300 origin-left" style="transform: scaleX(0)"></span>
               </span>
             </button>
             <button
@@ -138,11 +174,11 @@
               aria-controls="home-scenario-panel"
               tabindex="-1"
               data-scene-tab="workflow"
-              class="relative overflow-hidden px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors bg-white text-slate-700 hover:bg-slate-100 border border-slate-200"
+              class="relative overflow-hidden px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-slate-900/90 text-slate-300 hover:text-white border border-slate-700/80"
             >
               <span>自动化审批流转</span>
               <span aria-hidden="true" class="absolute inset-x-0 bottom-0 h-[3px] bg-transparent">
-                <span data-scene-progress="workflow" class="block h-full bg-white origin-left" style="transform: scaleX(0)"></span>
+                <span data-scene-progress="workflow" class="block h-full bg-sky-300 origin-left" style="transform: scaleX(0)"></span>
               </span>
             </button>
           </div>
@@ -151,51 +187,58 @@
             id="home-scenario-panel"
             role="tabpanel"
             aria-labelledby="scene-tab-operations"
-            class="mt-8 rounded-2xl bg-white border border-slate-200/80 p-6 sm:p-10 lg:p-12 shadow-xs"
+            class="holo-surface mt-8 rounded-2xl p-6 sm:p-10 lg:p-12"
           ></div>
         </div>
       </section>
 
-      <!-- 合作流程：极简四步 -->
-      <section aria-labelledby="home-process-heading" class="py-16 lg:py-24 bg-white">
+      <!-- 合作流程：全息四步卡片 -->
+      <section aria-labelledby="home-process-heading" class="py-16 lg:py-24">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="max-w-2xl mx-auto text-center">
-            <h2 id="home-process-heading" class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-950">
+            <p class="text-xs font-mono uppercase tracking-widest text-sky-400">DELIVERY PIPELINE</p>
+            <h2 id="home-process-heading" class="mt-2.5 text-2xl sm:text-3xl font-bold tracking-tight text-white">
               从沟通现状到验收交付，每一步清晰可控
             </h2>
-            <p class="mt-3 text-sm sm:text-base text-slate-600">
+            <p class="mt-3 text-sm sm:text-base text-slate-400">
               先确认要解决什么问题，再决定最轻量的实施路径。
             </p>
           </div>
 
-          <ol id="home-process-list" class="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10"></ol>
+          <ol id="home-process-list" class="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></ol>
         </div>
       </section>
 
-      <!-- 底部行动召唤横幅 -->
-      <section aria-labelledby="home-cta-heading" class="py-16 lg:py-20 bg-slate-900 text-white">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 id="home-cta-heading" class="text-2xl sm:text-3xl font-bold tracking-tight">
-            有业务流程想优化，或准备搭建新工具？
-          </h2>
-          <p class="mt-4 text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl mx-auto">
-            不必先写复杂的需求说明书，带着日常在用的表格或讲述具体工作环节，即可与我们直接沟通可行方案。
-          </p>
-          <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <a
-              href="about.html#contact"
-              class="inline-flex items-center justify-center px-6 py-3.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold transition-colors"
-            >
-              立即联系咨询
-            </a>
-            <button
-              type="button"
-              data-copy="19932599869"
-              data-copy-label="微信 / 电话：199 3259 9869"
-              class="inline-flex items-center justify-center px-6 py-3.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-100 text-sm font-semibold tabular-nums transition-colors"
-            >
-              微信 / 电话：199 3259 9869
-            </button>
+      <!-- 底部流光行动召唤横幅 -->
+      <section aria-labelledby="home-cta-heading" class="py-16 lg:py-20">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="laser-border rounded-3xl p-[1px]">
+            <div class="laser-border-inner rounded-[23px] px-6 py-12 sm:p-14 text-center">
+              <p class="text-xs font-mono uppercase tracking-widest text-sky-400">START A CONVERSATION</p>
+              <h2 id="home-cta-heading" class="mt-3 text-2xl sm:text-3xl font-bold tracking-tight text-white">
+                有业务流程想优化，或准备搭建新工具？
+              </h2>
+              <p class="mt-4 text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl mx-auto">
+                不必先写复杂的需求说明书，带着日常在用的表格或讲述具体工作环节，即可与我们直接沟通可行方案。
+              </p>
+              <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+                <a
+                  href="about.html#contact"
+                  class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-blue-600 text-white text-sm font-semibold transition-all"
+                >
+                  <span>立即联系咨询</span>
+                  <span aria-hidden="true">→</span>
+                </a>
+                <button
+                  type="button"
+                  data-copy="19932599869"
+                  data-copy-label="微信 / 电话：199 3259 9869"
+                  class="inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-100 text-sm font-semibold tabular-nums transition-all"
+                >
+                  微信 / 电话：199 3259 9869
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>

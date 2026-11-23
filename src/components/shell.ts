@@ -1,3 +1,7 @@
+import { initParticleStage, setParticleForm } from './particleStage';
+
+export { setParticleForm };
+
 /**
  * 复制文本到剪贴板，优先使用 Clipboard API，并在非安全上下文回退到 execCommand
  */
@@ -48,7 +52,7 @@ export function showToast(message: string): void {
     document.body.appendChild(toast);
   }
 
-  toast.innerHTML = `<div class="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-slate-900/92 text-white text-xs sm:text-sm font-semibold shadow-xl backdrop-blur-md border border-slate-700/80">
+  toast.innerHTML = `<div class="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-[#090E1E]/95 text-white text-xs sm:text-sm font-semibold shadow-[0_0_30px_rgba(56,189,248,0.45)] backdrop-blur-xl border border-sky-400/40">
     <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500 text-white text-xs font-bold">✓</span>
     <span>${message}</span>
   </div>`;
@@ -58,6 +62,86 @@ export function showToast(message: string): void {
   toastTimer = window.setTimeout(() => {
     toast?.classList.remove('is-visible');
   }, 2600);
+}
+
+/**
+ * Lusion 风格赛博文字逐字解码特效 (Kinetic Text Scramble)
+ */
+const SCRAMBLE_GLYPHS = '01<>/_+#*LIZI∆◊';
+
+export function scrambleText(el: HTMLElement | null, targetText: string, durationMs = 340): void {
+  if (!el) return;
+  const start = performance.now();
+  const chars = [...targetText];
+
+  const step = (now: number) => {
+    const progress = Math.min(1, (now - start) / durationMs);
+    const resolvedCount = Math.floor(progress * chars.length);
+    let out = '';
+
+    for (let i = 0; i < chars.length; i++) {
+      const ch = chars[i];
+      if (i < resolvedCount || ch === ' ' || ch === '·' || ch === '/') {
+        out += ch;
+      } else {
+        out += SCRAMBLE_GLYPHS[(i + Math.floor(now / 28)) % SCRAMBLE_GLYPHS.length];
+      }
+    }
+
+    el.textContent = out;
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
+    } else {
+      el.textContent = targetText;
+    }
+  };
+
+  window.requestAnimationFrame(step);
+}
+
+/**
+ * Lusion 风格自定义双环磁性流体光标
+ */
+function initCustomMagneticCursor(): void {
+  if (!window.matchMedia('(pointer: fine)').matches) return;
+  if (document.getElementById('lizi-cursor-dot')) return;
+
+  const dot = document.createElement('div');
+  dot.id = 'lizi-cursor-dot';
+  dot.setAttribute('aria-hidden', 'true');
+
+  const ring = document.createElement('div');
+  ring.id = 'lizi-cursor-ring';
+  ring.setAttribute('aria-hidden', 'true');
+
+  document.body.append(dot, ring);
+
+  let mouseX = -100;
+  let mouseY = -100;
+  let ringX = -100;
+  let ringY = -100;
+
+  window.addEventListener(
+    'pointermove',
+    (event) => {
+      mouseX = event.clientX;
+      mouseY = event.clientY;
+      dot.style.transform = `translate3d(${mouseX - 3.5}px, ${mouseY - 3.5}px, 0)`;
+
+      const interactive = (event.target as HTMLElement | null)?.closest('a, button, select, input, textarea, [data-carousel-tab]');
+      ring.classList.toggle('is-hovering', Boolean(interactive));
+    },
+    { passive: true }
+  );
+
+  const animateCursor = () => {
+    ringX += (mouseX - ringX) * 0.18;
+    ringY += (mouseY - ringY) * 0.18;
+    const sizeOffset = ring.classList.contains('is-hovering') ? 27 : 17;
+    ring.style.transform = `translate3d(${(ringX - sizeOffset).toFixed(1)}px, ${(ringY - sizeOffset).toFixed(1)}px, 0)`;
+    window.requestAnimationFrame(animateCursor);
+  };
+  window.requestAnimationFrame(animateCursor);
 }
 
 /**
@@ -74,20 +158,19 @@ export function enhanceInteractiveButtons(root: ParentNode = document): void {
     el.classList.add('btn-fx');
 
     const cls = el.className;
-    if (cls.includes('bg-blue-600') || cls.includes('bg-slate-900') || cls.includes('bg-emerald-600')) {
+    if (cls.includes('bg-blue-600') || cls.includes('from-blue-600')) {
       el.classList.add('btn-fx-primary');
     } else if (cls.includes('border')) {
       el.classList.add('btn-fx-secondary');
     }
 
-    // 桌面精细指针下的轻磁吸跟随效果（排除绝对定位悬浮按钮）
     if (window.matchMedia('(pointer: fine)').matches && !cls.includes('absolute') && !cls.includes('fixed')) {
       el.addEventListener('pointermove', (event) => {
         const rect = el.getBoundingClientRect();
-        if (rect.width > 360) return; // 超宽通栏按钮不做位移
+        if (rect.width > 360) return;
         const dx = event.clientX - (rect.left + rect.width / 2);
         const dy = event.clientY - (rect.top + rect.height / 2);
-        el.style.transform = `translate3d(${(dx * 0.14).toFixed(2)}px, ${(dy * 0.2).toFixed(2)}px, 0)`;
+        el.style.transform = `translate3d(${(dx * 0.16).toFixed(2)}px, ${(dy * 0.22).toFixed(2)}px, 0)`;
       });
 
       el.addEventListener('pointerleave', () => {
@@ -98,7 +181,7 @@ export function enhanceInteractiveButtons(root: ParentNode = document): void {
 }
 
 /**
- * 全局点击水波纹事件委托（支持静态与动态渲染的所有按钮和卡片链接）
+ * 全局点击水波纹事件委托
  */
 function initGlobalClickRipple(): void {
   document.addEventListener('pointerdown', (event) => {
@@ -106,14 +189,10 @@ function initGlobalClickRipple(): void {
     if (!target) return;
 
     const rect = target.getBoundingClientRect();
-    const size = Math.max(rect.width, rect.height) * 1.15;
+    const size = Math.max(rect.width, rect.height) * 1.25;
     const ripple = document.createElement('span');
-    const isLightBg =
-      target.className.includes('bg-white') ||
-      target.className.includes('bg-slate-100') ||
-      target.className.includes('bg-slate-50');
 
-    ripple.className = `click-ripple ${isLightBg ? 'click-ripple-dark' : ''}`;
+    ripple.className = 'click-ripple';
     ripple.style.width = `${size}px`;
     ripple.style.height = `${size}px`;
     ripple.style.left = `${event.clientX - rect.left}px`;
@@ -123,56 +202,44 @@ function initGlobalClickRipple(): void {
     target.appendChild(ripple);
     window.setTimeout(() => {
       ripple.remove();
-    }, 580);
+    }, 620);
   });
 }
 
 /**
- * 为卡片与视觉图框注入鼠标跟随聚光灯与 3D 悬浮微倾斜
+ * 为全站卡片与视觉图框注入全息棱镜折射聚光灯与 3D 悬浮倾斜
  */
 export function enhanceCardsAndTilt(root: ParentNode = document): void {
   const cards = root.querySelectorAll<HTMLElement>(
-    'article, #home-services-grid > div, #guarantees-grid > div, #about-principles-grid > div, #approach-steps > div, #home-process-list > li'
+    'article, #home-services-grid > div, #guarantees-grid > div, #about-principles-grid > div, #approach-steps > div, #home-process-list > li, .holo-surface'
   );
 
   cards.forEach((card) => {
     if (card.dataset.spotlightReady === 'true') return;
     card.dataset.spotlightReady = 'true';
-    card.classList.add('spotlight-card', 'rounded-2xl');
+    card.classList.add('holo-card', 'rounded-2xl');
     if (!card.className.includes('p-')) {
-      card.classList.add('p-5', '-m-5');
+      card.classList.add('p-6');
     }
 
     card.addEventListener('pointermove', (event) => {
       const rect = card.getBoundingClientRect();
-      card.style.setProperty('--mx', `${(event.clientX - rect.left).toFixed(1)}px`);
-      card.style.setProperty('--my', `${(event.clientY - rect.top).toFixed(1)}px`);
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      card.style.setProperty('--mx', `${x.toFixed(1)}px`);
+      card.style.setProperty('--my', `${y.toFixed(1)}px`);
+
+      if (window.matchMedia('(pointer: fine)').matches && rect.width < 680) {
+        const nx = x / rect.width - 0.5;
+        const ny = y / rect.height - 0.5;
+        card.style.transform = `perspective(1100px) rotateX(${(-ny * 6).toFixed(2)}deg) rotateY(${(nx * 7).toFixed(2)}deg) translateY(-4px)`;
+      }
+    });
+
+    card.addEventListener('pointerleave', () => {
+      card.style.transform = '';
     });
   });
-
-  if (window.matchMedia('(pointer: fine)').matches) {
-    const tiltTargets = root.querySelectorAll<HTMLElement>(
-      '#work-cards-grid > article, #services-zig-zag img, #home-scenario-panel img'
-    );
-
-    tiltTargets.forEach((target) => {
-      const frame = target.tagName === 'IMG' ? target.parentElement ?? target : target;
-      if (frame.dataset.tiltReady === 'true') return;
-      frame.dataset.tiltReady = 'true';
-      frame.classList.add('tilt-card');
-
-      frame.addEventListener('pointermove', (event) => {
-        const rect = frame.getBoundingClientRect();
-        const nx = (event.clientX - rect.left) / rect.width - 0.5;
-        const ny = (event.clientY - rect.top) / rect.height - 0.5;
-        frame.style.transform = `perspective(1000px) rotateX(${(-ny * 5).toFixed(2)}deg) rotateY(${(nx * 6).toFixed(2)}deg) translateY(-3px)`;
-      });
-
-      frame.addEventListener('pointerleave', () => {
-        frame.style.transform = '';
-      });
-    });
-  }
 }
 
 /**
@@ -214,7 +281,7 @@ export function initScrollReveals(): void {
 }
 
 /**
- * 拦截站内跨页链接点击，呈现平滑的顶部激光进度条 + 磨砂过渡加载动效
+ * 拦截站内跨页链接点击，呈现电影级时空门转场与激光进度条
  */
 function initPageTransitions(): void {
   let loader = document.getElementById('page-transition-loader');
@@ -224,23 +291,22 @@ function initPageTransitions(): void {
     loader.setAttribute('aria-hidden', 'true');
     loader.innerHTML = `<div class="loader-pill">
       <span class="loader-spinner"></span>
-      <span id="loader-pill-text">正在切换页面…</span>
+      <span id="loader-pill-text">LIZI // 正在切换空间…</span>
     </div>`;
     document.body.appendChild(loader);
   }
 
-  // 处理浏览器后退/前进缓存恢复
   window.addEventListener('pageshow', () => {
     document.body.classList.remove('is-page-leaving');
     loader?.classList.remove('is-active');
   });
 
   const pageNames: Record<string, string> = {
-    'index.html': '首页',
-    'capabilities.html': '核心服务',
-    'work.html': '解决方案',
-    'project.html': '在线原型体验',
-    'about.html': '关于我们与联系'
+    'index.html': '首页 · 三维粒子舞台',
+    'capabilities.html': '核心服务 · 数字化体系',
+    'work.html': '解决方案 · 架构展厅',
+    'project.html': '交互原型实验室',
+    'about.html': '关于我们与需求咨询'
   };
 
   document.addEventListener('click', (event) => {
@@ -272,27 +338,23 @@ function initPageTransitions(): void {
     }
 
     if (targetUrl.origin !== window.location.origin) return;
-
-    // 如果仅是当前页面的锚点跳转，交给浏览器平滑滚动
     if (targetUrl.pathname === window.location.pathname && targetUrl.search === window.location.search && targetUrl.hash) {
       return;
     }
-
-    // 如果点击的是当前完全相同的 URL，不重复跳转
     if (targetUrl.href === window.location.href) return;
 
     event.preventDefault();
 
     const fileName = targetUrl.pathname.split('/').pop() || 'index.html';
-    const label = pageNames[fileName] || '目标页面';
+    const label = pageNames[fileName] || '目标模块';
     const pillText = document.getElementById('loader-pill-text');
     if (pillText) {
-      pillText.textContent = `正在前往 · ${label}`;
+      pillText.textContent = `LIZI // 正在载入 · ${label}`;
     }
 
     const progressBar = document.getElementById('page-progress');
     if (progressBar) {
-      progressBar.style.transform = 'scaleX(0.82)';
+      progressBar.style.transform = 'scaleX(0.86)';
     }
 
     document.body.classList.add('is-page-leaving');
@@ -300,14 +362,48 @@ function initPageTransitions(): void {
 
     window.setTimeout(() => {
       window.location.href = targetUrl.href;
-    }, 180);
+    }, 185);
   });
 }
 
 /**
- * 初始化全站共享交互：移动导航抽屉、阅读进度条、回到顶部、全站复制按钮、右下角快捷联系浮窗及全局动效
+ * 全局 Ctrl+K / ⌘K 极客指令舱
  */
-export function initShell(): void {
+function initCommandPalette(): void {
+  const trigger = document.getElementById('cmd-palette-trigger');
+  const modal = document.getElementById('cmd-palette-modal');
+  const closeBtn = document.getElementById('cmd-palette-close');
+  if (!modal) return;
+
+  const setOpen = (open: boolean) => {
+    modal.hidden = !open;
+    modal.classList.toggle('hidden', !open);
+  };
+
+  trigger?.addEventListener('click', () => setOpen(modal.hidden));
+  closeBtn?.addEventListener('click', () => setOpen(false));
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) setOpen(false);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+      event.preventDefault();
+      setOpen(modal.hidden);
+    } else if (event.key === 'Escape' && !modal.hidden) {
+      setOpen(false);
+    }
+  });
+}
+
+/**
+ * 初始化全站共享交互：3D 粒子舞台、磁性双环光标、指令舱、抽屉导航、阅读进度条、快捷联系浮窗及全息卡片
+ */
+export function initShell(initialParticleForm = 0): void {
+  initParticleStage(initialParticleForm);
+  initCustomMagneticCursor();
+  initCommandPalette();
+
   const menuToggle = document.getElementById('menu-toggle') as HTMLButtonElement | null;
   const mobileNav = document.getElementById('mobile-nav');
   const iconOpen = document.getElementById('menu-icon-open');
@@ -421,7 +517,7 @@ export function initShell(): void {
     });
   });
 
-  // 全站通用复制按钮（页脚微信号/邮箱、首页联系区、快捷浮窗等）
+  // 全站通用复制按钮
   const footerStatus = document.getElementById('footer-copy-status');
   document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((button) => {
     button.addEventListener('click', async () => {
@@ -445,7 +541,6 @@ export function initShell(): void {
     });
   });
 
-  // 启动全局水波纹、页面切换过渡，并在首帧及内容渲染后自动增强所有按钮与卡片
   initGlobalClickRipple();
   initPageTransitions();
   window.requestAnimationFrame(() => {

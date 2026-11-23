@@ -8,10 +8,10 @@ function renderPrinciples(): void {
   if (!grid) return;
 
   grid.innerHTML = ABOUT_PRINCIPLES.map(
-    (item, idx) => `<div>
-      <span class="text-sm font-bold text-blue-600">0${idx + 1}</span>
-      <h3 class="mt-2.5 text-lg font-bold text-slate-950">${item.title}</h3>
-      <p class="mt-2 text-sm text-slate-600 leading-relaxed">${item.description}</p>
+    (item, idx) => `<div class="holo-card holo-surface rounded-2xl p-6">
+      <span class="text-xs font-mono font-bold text-sky-400">PRINCIPLE 0${idx + 1}</span>
+      <h3 class="mt-2.5 text-lg font-bold text-white">${item.title}</h3>
+      <p class="mt-2 text-sm text-slate-400 leading-relaxed">${item.description}</p>
     </div>`
   ).join('');
 }
@@ -107,7 +107,7 @@ function initConsultSection(): void {
           : `您可以点击上方「复制咨询单内容」或通过邮件发送。`;
       }
     } else if (statusEl) {
-      statusEl.className = 'text-xs text-emerald-700 font-medium min-h-[1rem]';
+      statusEl.className = 'text-xs text-emerald-400 font-medium min-h-[1rem]';
       statusEl.textContent = copied
         ? `✓ 咨询内容已复制！请添加微信 ${SITE.phoneDisplay} 直接粘贴发送。`
         : `请手动复制需求说明，并添加微信 ${SITE.phoneDisplay}。`;
@@ -187,6 +187,6 @@ function initConsultSection(): void {
   });
 }
 
-initShell();
 renderPrinciples();
+initShell(3);
 initConsultSection();

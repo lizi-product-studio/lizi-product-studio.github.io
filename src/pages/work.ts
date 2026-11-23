@@ -1,5 +1,5 @@
 import '../styles/main.css';
-import { initShell } from '../components/shell';
+import { initShell, setParticleForm } from '../components/shell';
 import { CONCEPTS } from '../data/concepts';
 
 function renderCards(): void {
@@ -9,22 +9,22 @@ function renderCards(): void {
   const list = [CONCEPTS.operations, CONCEPTS.agent, CONCEPTS.workflow];
   grid.innerHTML = list
     .map(
-      (item) => `<article data-category="${item.filterCategory}" class="group rounded-2xl border border-slate-200 bg-white overflow-hidden hover:border-blue-300 hover:shadow-lg hover:shadow-slate-200/50 transition-all flex flex-col justify-between">
-        <div>
-          <a href="project.html?project=${item.id}" class="block overflow-hidden bg-[#F4F7FB] border-b border-slate-100">
-            <img src="${item.image}" alt="${item.imageAlt}" class="w-full aspect-video object-cover group-hover:scale-[1.02] transition-transform duration-300 block" />
+      (item, idx) => `<article data-category="${item.filterCategory}" data-particle-idx="${idx}" class="group rounded-2xl overflow-hidden flex flex-col justify-between">
+        <div class="relative z-10">
+          <a href="project.html?project=${item.id}" class="block overflow-hidden bg-[#070B18] border-b border-slate-800/80">
+            <img src="${item.image}" alt="${item.imageAlt}" class="w-full aspect-video object-cover group-hover:scale-105 transition-transform duration-500 block" />
           </a>
           <div class="p-6">
-            <p class="text-xs font-semibold text-blue-600">${item.categoryTag}</p>
-            <h2 class="mt-2 text-xl font-bold text-slate-950">
-              <a href="project.html?project=${item.id}" class="hover:text-blue-600 transition-colors">${item.name} · ${item.subtitle}</a>
+            <p class="text-xs font-mono font-semibold text-sky-400">0${idx + 1} // ${item.categoryTag}</p>
+            <h2 class="mt-2 text-xl font-bold text-white">
+              <a href="project.html?project=${item.id}" class="hover:text-sky-300 transition-colors">${item.name} · ${item.subtitle}</a>
             </h2>
-            <p class="mt-2.5 text-sm text-slate-600 leading-relaxed">${item.shortSummary}</p>
+            <p class="mt-2.5 text-sm text-slate-400 leading-relaxed">${item.shortSummary}</p>
           </div>
         </div>
 
-        <div class="px-6 pb-6">
-          <a href="project.html?project=${item.id}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors">
+        <div class="relative z-10 px-6 pb-6">
+          <a href="project.html?project=${item.id}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-sky-400 hover:text-sky-300 transition-colors">
             <span>在线体验原型</span>
             <span aria-hidden="true">→</span>
           </a>
@@ -32,6 +32,13 @@ function renderCards(): void {
       </article>`
     )
     .join('');
+
+  grid.querySelectorAll<HTMLElement>('[data-particle-idx]').forEach((card) => {
+    card.addEventListener('mouseenter', () => {
+      const idx = Number(card.dataset.particleIdx ?? 0);
+      setParticleForm(idx);
+    });
+  });
 }
 
 function initFilters(): void {
@@ -40,13 +47,22 @@ function initFilters(): void {
   const empty = document.getElementById('work-empty');
   const grid = document.getElementById('work-cards-grid');
 
+  const filterFormMap: Record<string, number> = {
+    all: 2,
+    software: 0,
+    agent: 1,
+    workflow: 2
+  };
+
   const applyFilter = (filter: string) => {
+    setParticleForm(filterFormMap[filter] ?? 2);
+
     buttons.forEach((button) => {
       const active = button.dataset.filter === filter;
       button.setAttribute('aria-pressed', String(active));
       button.className = active
-        ? 'px-4 py-2 rounded-lg text-sm font-semibold transition-colors bg-blue-600 text-white'
-        : 'px-4 py-2 rounded-lg text-sm font-semibold transition-colors bg-white text-slate-700 hover:bg-slate-100 border border-slate-200';
+        ? 'px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-blue-600 text-white'
+        : 'px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-slate-900/90 text-slate-300 hover:text-white border border-slate-700/80';
     });
 
     let visibleCount = 0;
@@ -79,6 +95,6 @@ function initFilters(): void {
   });
 }
 
-initShell();
 renderCards();
 initFilters();
+initShell(2);

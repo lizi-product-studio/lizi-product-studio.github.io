@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#03050c" />
     <meta
       name="description"
       content="查看栗子软件科技设计的典型业务解决方案与在线原型：序章·运营工作台、知间·知识 Agent 与有序·审批工作流。"
@@ -12,59 +12,63 @@
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <script type="module" src="./src/pages/work.ts"></script>
   </head>
-  <body class="bg-white text-slate-900 antialiased">
+  <body class="bg-[#03050c] text-slate-100 antialiased">
     <!-- SITE_HEADER -->
 
     <main id="main">
-      <!-- 顶部简洁居中 Banner -->
-      <section aria-labelledby="work-title" class="bg-gradient-to-b from-[#F5F8FD] to-white py-14 lg:py-20 border-b border-slate-100">
+      <!-- 顶部深空全息 Banner -->
+      <section aria-labelledby="work-title" class="py-14 lg:py-20 border-b border-slate-800/80">
         <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p class="text-sm font-semibold text-blue-600">典型解决方案与交互原型</p>
-          <h1 id="work-title" class="mt-3 text-3xl sm:text-4xl lg:text-[42px] font-bold tracking-tight text-slate-950 leading-tight">
-            点开即可试用界面流程，看清实际边界
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-sky-400/30 text-sky-300 text-xs font-mono uppercase tracking-wider">
+            <span class="w-1.5 h-1.5 rounded-full bg-sky-400 animate-ping"></span>
+            <span>SOLUTIONS & PROTOTYPES</span>
+          </div>
+          <h1 id="work-title" class="mt-4 text-3xl sm:text-4xl lg:text-[42px] font-bold tracking-tight text-white leading-tight">
+            点开即可试用界面流程，<span class="bg-gradient-to-r from-sky-300 via-blue-400 to-indigo-300 bg-clip-text text-transparent">看清实际边界</span>
           </h1>
-          <p class="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed">
+          <p class="mt-4 text-base sm:text-lg text-slate-300/90 leading-relaxed">
             围绕常见企业协作、知识检索与审批流转场景整理的参考方案。内置演示数据，方便你在沟通前直观体验产品结构。
           </p>
 
-          <!-- 干净筛选栏 -->
+          <!-- 筛选栏 -->
           <div class="mt-8 inline-flex flex-wrap items-center justify-center gap-2" role="group" aria-label="按业务方向筛选">
-            <button type="button" data-filter="all" aria-pressed="true" class="px-4 py-2 rounded-lg text-sm font-semibold transition-colors bg-blue-600 text-white">
+            <button type="button" data-filter="all" aria-pressed="true" class="px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-blue-600 text-white">
               全部方案
             </button>
-            <button type="button" data-filter="software" aria-pressed="false" class="px-4 py-2 rounded-lg text-sm font-semibold transition-colors bg-white text-slate-700 hover:bg-slate-100 border border-slate-200">
+            <button type="button" data-filter="software" aria-pressed="false" class="px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-slate-900/90 text-slate-300 hover:text-white border border-slate-700/80">
               企业软件
             </button>
-            <button type="button" data-filter="agent" aria-pressed="false" class="px-4 py-2 rounded-lg text-sm font-semibold transition-colors bg-white text-slate-700 hover:bg-slate-100 border border-slate-200">
+            <button type="button" data-filter="agent" aria-pressed="false" class="px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-slate-900/90 text-slate-300 hover:text-white border border-slate-700/80">
               AI Agent
             </button>
-            <button type="button" data-filter="workflow" aria-pressed="false" class="px-4 py-2 rounded-lg text-sm font-semibold transition-colors bg-white text-slate-700 hover:bg-slate-100 border border-slate-200">
+            <button type="button" data-filter="workflow" aria-pressed="false" class="px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-slate-900/90 text-slate-300 hover:text-white border border-slate-700/80">
               工作流自动化
             </button>
           </div>
         </div>
       </section>
 
-      <!-- 大方图文方案卡片 -->
-      <section aria-label="解决方案列表" class="py-14 lg:py-20 bg-white">
+      <!-- 全息 3D 方案卡片 -->
+      <section aria-label="解决方案列表" class="py-14 lg:py-20">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div id="work-cards-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-8"></div>
-          <p id="work-empty" hidden class="py-12 text-center text-sm text-slate-500">暂无匹配方案，请切换其他分类查看。</p>
+          <p id="work-empty" hidden class="py-12 text-center text-sm text-slate-400">暂无匹配方案，请切换其他分类查看。</p>
         </div>
       </section>
 
       <!-- 底部咨询引导 -->
-      <section aria-labelledby="work-cta-title" class="py-14 lg:py-16 bg-[#F7F9FC] border-t border-slate-200/70">
+      <section aria-labelledby="work-cta-title" class="py-14 lg:py-16 border-t border-slate-800/80 bg-[#050814]/60">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
-            <h2 id="work-cta-title" class="text-xl sm:text-2xl font-bold text-slate-950">有类似场景想落地，或需要定制调整？</h2>
-            <p class="mt-2 text-sm text-slate-600">结合团队目前使用的表格与工作方式，沟通最合适的起步方案。</p>
+            <h2 id="work-cta-title" class="text-xl sm:text-2xl font-bold text-white">有类似场景想落地，或需要定制调整？</h2>
+            <p class="mt-2 text-sm text-slate-400">结合团队目前使用的表格与工作方式，沟通最合适的起步方案。</p>
           </div>
           <a
             href="about.html#contact"
-            class="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-colors shrink-0"
+            class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-blue-600 text-white text-sm font-semibold transition-all shrink-0"
           >
-            预约需求沟通 →
+            <span>预约需求沟通</span>
+            <span aria-hidden="true">→</span>
           </a>
         </div>
       </section>

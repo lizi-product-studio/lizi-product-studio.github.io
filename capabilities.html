@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#03050c" />
     <meta
       name="description"
       content="栗子软件科技核心服务：企业软件开发、AI Agent 搭建、工作流自动化与企业官网建设，按实际需求组合与样本验收交付。"
@@ -12,46 +12,51 @@
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <script type="module" src="./src/pages/capabilities.ts"></script>
   </head>
-  <body class="bg-white text-slate-900 antialiased">
+  <body class="bg-[#03050c] text-slate-100 antialiased">
     <!-- SITE_HEADER -->
 
     <main id="main">
-      <!-- 顶部简洁居中 Banner -->
-      <section aria-labelledby="cap-hero-title" class="bg-gradient-to-b from-[#F5F8FD] to-white py-14 lg:py-20 border-b border-slate-100">
+      <!-- 顶部深空全息 Banner -->
+      <section aria-labelledby="cap-hero-title" class="py-14 lg:py-20 border-b border-slate-800/80">
         <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p class="text-sm font-semibold text-blue-600">核心服务与交付体系</p>
-          <h1 id="cap-hero-title" class="mt-3 text-3xl sm:text-4xl lg:text-[42px] font-bold tracking-tight text-slate-950 leading-tight">
-            围绕日常业务需要，务实交付每项软件工具
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-sky-400/30 text-sky-300 text-xs font-mono uppercase tracking-wider">
+            <span class="w-1.5 h-1.5 rounded-full bg-sky-400 animate-ping"></span>
+            <span>CORE SERVICES // 01 — 04</span>
+          </div>
+          <h1 id="cap-hero-title" class="mt-4 text-3xl sm:text-4xl lg:text-[42px] font-bold tracking-tight text-white leading-tight">
+            围绕日常业务需要，<span class="bg-gradient-to-r from-sky-300 via-blue-400 to-indigo-300 bg-clip-text text-transparent">务实交付每项软件工具</span>
           </h1>
-          <p class="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed">
+          <p class="mt-4 text-base sm:text-lg text-slate-300/90 leading-relaxed">
             现有表格与工具不一定需要全盘推翻。我们先一起看清问题出在哪一步，再决定开发定制系统、补齐 AI 检索，还是串联自动化流程。
           </p>
         </div>
       </section>
 
-      <!-- 四项服务 Zig-Zag 图文通栏 -->
-      <div id="services-zig-zag"></div>
+      <!-- 四项服务全息 Zig-Zag 图文区 -->
+      <div id="services-zig-zag" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16 space-y-10"></div>
 
       <!-- 交付保障原则 -->
-      <section aria-labelledby="guarantees-title" class="py-16 lg:py-24 bg-[#F7F9FC] border-t border-slate-200/70">
+      <section aria-labelledby="guarantees-title" class="py-16 lg:py-24 border-t border-slate-800/80 bg-[#050814]/60">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="max-w-2xl mx-auto text-center">
-            <h2 id="guarantees-title" class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-950">
+            <p class="text-xs font-mono uppercase tracking-widest text-sky-400">DELIVERY STANDARDS</p>
+            <h2 id="guarantees-title" class="mt-2.5 text-2xl sm:text-3xl font-bold tracking-tight text-white">
               合作前说清边界，交付时共同核对
             </h2>
-            <p class="mt-3 text-sm sm:text-base text-slate-600">
+            <p class="mt-3 text-sm sm:text-base text-slate-400">
               不追求堆砌功能，确保做出来的软件真实契合团队日常习惯。
             </p>
           </div>
 
-          <div id="guarantees-grid" class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10"></div>
+          <div id="guarantees-grid" class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6"></div>
 
           <div class="mt-14 text-center">
             <a
               href="about.html#contact"
-              class="inline-flex items-center justify-center px-6 py-3.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-colors"
+              class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-blue-600 text-white text-sm font-semibold transition-all"
             >
-              预约需求沟通 →
+              <span>预约需求沟通</span>
+              <span aria-hidden="true">→</span>
             </a>
           </div>
         </div>
