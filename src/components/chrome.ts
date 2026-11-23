@@ -73,11 +73,103 @@ export function renderHeader(activePage: PageId): string {
 }
 
 /**
- * 渲染标准现代企业官网页脚（干净 3 列浅灰排版，无繁杂框套框）
+ * 渲染右下角全站快捷微信/电话咨询浮窗
+ */
+function renderQuickContactWidget(activePage: PageId): string {
+  const formHref = activePage === 'about' ? '#contact' : 'about.html#contact';
+  return `<div id="quick-contact-widget" class="fixed bottom-5 right-5 z-40 flex flex-col items-end">
+  <div
+    id="quick-contact-panel"
+    hidden
+    role="dialog"
+    aria-label="快捷联系栗子软件科技"
+    class="hidden mb-2.5 w-72 sm:w-80 rounded-2xl bg-white border border-slate-200/90 shadow-xl p-4 sm:p-5 text-slate-900"
+  >
+    <div class="flex items-start justify-between gap-2 pb-3 border-b border-slate-100">
+      <div>
+        <p class="text-sm font-bold text-slate-950">快捷联系我们</p>
+        <p class="text-xs text-slate-500 mt-0.5">微信或电话直连，快速评估需求</p>
+      </div>
+      <button
+        type="button"
+        id="quick-contact-close"
+        aria-label="收起快捷联系"
+        class="inline-flex items-center justify-center w-7 h-7 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+      >
+        ✕
+      </button>
+    </div>
+
+    <div class="mt-3.5 space-y-2.5 text-xs">
+      <div class="rounded-xl bg-[#F7F9FC] p-3 flex items-center justify-between gap-2">
+        <div>
+          <p class="text-slate-500">电话 / 微信同号</p>
+          <p class="mt-0.5 text-sm font-bold text-slate-950 tabular-nums">${SITE.phoneDisplay}</p>
+        </div>
+        <div class="flex items-center gap-1.5 shrink-0">
+          <button
+            type="button"
+            data-copy="${SITE.phoneRaw}"
+            data-copy-label="复制微信"
+            class="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-colors"
+          >
+            复制微信
+          </button>
+          <a
+            href="tel:${SITE.phoneRaw}"
+            class="px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 hover:border-blue-300 font-semibold transition-colors"
+          >
+            拨打
+          </a>
+        </div>
+      </div>
+
+      <div class="rounded-xl bg-[#F7F9FC] p-3 flex items-center justify-between gap-2">
+        <div class="min-w-0">
+          <p class="text-slate-500">联系邮箱</p>
+          <p class="mt-0.5 text-xs font-semibold text-slate-900 truncate">${SITE.email}</p>
+        </div>
+        <button
+          type="button"
+          data-copy="${SITE.email}"
+          data-copy-label="复制邮箱"
+          class="px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 hover:border-blue-300 font-semibold transition-colors shrink-0"
+        >
+          复制邮箱
+        </button>
+      </div>
+    </div>
+
+    <a
+      href="${formHref}"
+      id="quick-contact-form-link"
+      class="mt-3.5 flex items-center justify-center gap-1.5 w-full px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition-colors"
+    >
+      <span>在线填写需求咨询单</span>
+      <span aria-hidden="true">→</span>
+    </a>
+  </div>
+
+  <button
+    type="button"
+    id="quick-contact-toggle"
+    aria-expanded="false"
+    aria-controls="quick-contact-panel"
+    class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold shadow-lg shadow-blue-600/25 transition-all"
+  >
+    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span>微信 / 电话咨询</span>
+  </button>
+</div>`;
+}
+
+/**
+ * 渲染标准现代企业官网页脚（干净 3 列浅灰排版，附带全站右下角快捷咨询浮窗）
  */
 export function renderFooter(activePage: PageId): string {
   const isCompact = activePage === 'about';
   const year = COPY_YEAR;
+  const widgetHtml = renderQuickContactWidget(activePage);
 
   if (isCompact) {
     return `<footer class="bg-[#F7F9FC] border-t border-slate-200/80">
@@ -92,7 +184,8 @@ export function renderFooter(activePage: PageId): string {
       <button type="button" data-back-top class="text-slate-600 hover:text-slate-950 font-medium transition-colors">回到顶部 ↑</button>
     </div>
   </div>
-</footer>`;
+</footer>
+${widgetHtml}`;
   }
 
   const navLinks = SITE.nav
@@ -144,5 +237,6 @@ export function renderFooter(activePage: PageId): string {
       <button type="button" data-back-top class="text-slate-600 hover:text-slate-950 font-medium transition-colors">回到顶部 ↑</button>
     </div>
   </div>
-</footer>`;
+</footer>
+${widgetHtml}`;
 }

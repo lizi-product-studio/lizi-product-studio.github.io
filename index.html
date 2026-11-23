@@ -16,16 +16,16 @@
     <!-- SITE_HEADER -->
 
     <main id="main">
-      <!-- Hero 首屏：标准企业官网大气图文布局 -->
+      <!-- Hero 首屏：左侧核心价值主张 + 右侧四大核心业务自动轮播画廊 -->
       <section aria-labelledby="home-hero-title" class="bg-gradient-to-b from-[#F5F8FD] via-white to-white">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-16 lg:pt-20 lg:pb-24">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16 lg:pt-16 lg:pb-24">
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-            <div class="lg:col-span-6">
+            <div class="lg:col-span-5">
               <p class="text-sm font-semibold text-blue-600">栗子软件科技 · 软件设计与智能化服务</p>
-              <h1 id="home-hero-title" class="mt-4 text-[30px] sm:text-4xl lg:text-[44px] font-bold tracking-tight text-slate-950 leading-[1.2]">
+              <h1 id="home-hero-title" class="mt-4 text-[28px] sm:text-4xl lg:text-[36px] font-bold tracking-tight text-slate-950 leading-[1.24]">
                 企业软件与 AI 自动化，<br />让业务运转更清晰高效。
               </h1>
-              <p class="mt-5 text-base sm:text-lg text-slate-600 leading-relaxed max-w-lg">
+              <p class="mt-5 text-base sm:text-lg text-slate-600 leading-relaxed">
                 聚焦企业管理软件定制、AI 知识助手、工作流自动化与品牌官网建设。从每天实际遇到的繁琐环节切入，打造团队顺手好用的工具。
               </p>
 
@@ -45,13 +45,27 @@
               </div>
             </div>
 
-            <div class="lg:col-span-6">
-              <div class="rounded-2xl overflow-hidden bg-[#F4F7FB] shadow-[0_20px_50px_-15px_rgba(15,23,42,0.08)] border border-slate-200/60">
-                <img
-                  src="./src/assets/images/hero-visual.jpg"
-                  alt="企业软件与智能协同架构三维视觉"
-                  class="w-full aspect-video object-cover block"
-                />
+            <!-- 右侧：四大核心业务自动轮播画廊 -->
+            <div class="lg:col-span-7">
+              <div
+                id="hero-carousel"
+                aria-roledescription="carousel"
+                aria-label="四大核心业务展示轮播"
+                class="rounded-2xl bg-white border border-slate-200/80 shadow-[0_24px_60px_-15px_rgba(15,23,42,0.10)] overflow-hidden select-none"
+              >
+                <!-- 轮播主画面视口 -->
+                <div id="hero-carousel-viewport" class="relative aspect-video bg-[#F4F7FB] overflow-hidden"></div>
+
+                <!-- 轮播当前帧文字说明条 -->
+                <div id="hero-carousel-caption" aria-live="polite" class="px-5 py-4 sm:px-6 sm:py-5 bg-white border-t border-slate-100"></div>
+
+                <!-- 底部 4 项读秒进度条与指示器切换栏 -->
+                <div
+                  id="hero-carousel-tabs"
+                  role="tablist"
+                  aria-label="切换核心业务轮播项"
+                  class="grid grid-cols-4 bg-[#F7F9FC] border-t border-slate-200/80 divide-x divide-slate-200/70"
+                ></div>
               </div>
             </div>
           </div>

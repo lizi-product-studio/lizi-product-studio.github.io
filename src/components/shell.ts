@@ -34,7 +34,7 @@ export async function copyToClipboard(text: string): Promise<boolean> {
 }
 
 /**
- * 初始化全站共享交互：移动导航抽屉、阅读进度条、回到顶部、全站复制按钮
+ * 初始化全站共享交互：移动导航抽屉、阅读进度条、回到顶部、全站复制按钮、右下角快捷联系浮窗
  */
 export function initShell(): void {
   const menuToggle = document.getElementById('menu-toggle') as HTMLButtonElement | null;
@@ -65,16 +65,58 @@ export function initShell(): void {
     }
   });
 
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && menuToggle?.getAttribute('aria-expanded') === 'true') {
-      setMenuOpen(false);
-      menuToggle.focus();
-    }
-  });
-
   const desktopQuery = window.matchMedia('(min-width: 768px)');
   desktopQuery.addEventListener?.('change', (event) => {
     if (event.matches) setMenuOpen(false);
+  });
+
+  // 右下角快捷联系浮窗
+  const quickWidget = document.getElementById('quick-contact-widget');
+  const quickToggle = document.getElementById('quick-contact-toggle') as HTMLButtonElement | null;
+  const quickPanel = document.getElementById('quick-contact-panel');
+  const quickClose = document.getElementById('quick-contact-close');
+  const quickFormLink = document.getElementById('quick-contact-form-link');
+
+  const setQuickOpen = (open: boolean) => {
+    if (!quickToggle || !quickPanel) return;
+    quickToggle.setAttribute('aria-expanded', String(open));
+    quickPanel.hidden = !open;
+    quickPanel.classList.toggle('hidden', !open);
+  };
+
+  quickToggle?.addEventListener('click', () => {
+    const isOpen = quickToggle.getAttribute('aria-expanded') === 'true';
+    setQuickOpen(!isOpen);
+  });
+
+  quickClose?.addEventListener('click', () => {
+    setQuickOpen(false);
+    quickToggle?.focus({ preventScroll: true });
+  });
+
+  quickFormLink?.addEventListener('click', () => {
+    setQuickOpen(false);
+  });
+
+  document.addEventListener('click', (event) => {
+    if (!quickWidget || !quickToggle || quickToggle.getAttribute('aria-expanded') !== 'true') return;
+    const target = event.target as Node | null;
+    if (target && !quickWidget.contains(target)) {
+      setQuickOpen(false);
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      if (menuToggle?.getAttribute('aria-expanded') === 'true') {
+        setMenuOpen(false);
+        menuToggle.focus();
+      }
+      if (quickToggle?.getAttribute('aria-expanded') === 'true') {
+        setQuickOpen(false);
+        quickToggle.focus({ preventScroll: true });
+      }
+    }
   });
 
   // 顶部细阅读进度条
@@ -109,7 +151,7 @@ export function initShell(): void {
     });
   });
 
-  // 全站通用复制按钮（页脚微信号/邮箱、首页联系区等）
+  // 全站通用复制按钮（页脚微信号/邮箱、首页联系区、快捷浮窗等）
   const footerStatus = document.getElementById('footer-copy-status');
   document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((button) => {
     button.addEventListener('click', async () => {

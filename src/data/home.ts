@@ -1,3 +1,57 @@
+export interface HeroCarouselSlide {
+  id: 'software' | 'agent' | 'automation' | 'web';
+  badge: string;
+  shortTab: string;
+  title: string;
+  summary: string;
+  highlightTag: string;
+  href: string;
+  ctaLabel: string;
+}
+
+export const HERO_CAROUSEL_SLIDES: readonly HeroCarouselSlide[] = [
+  {
+    id: 'software',
+    badge: '01 · 企业软件开发',
+    shortTab: '企业软件',
+    title: '定制业务与订单协同系统',
+    summary: '把散落在多份表格与群聊里的订单进度、交期变更和责任人统一到一个工作台。',
+    highlightTag: '实时同步订单状态与操作留痕',
+    href: 'capabilities.html#software',
+    ctaLabel: '查看软件定制服务'
+  },
+  {
+    id: 'agent',
+    badge: '02 · AI Agent 搭建',
+    shortTab: 'AI Agent',
+    title: '有出处、守权限的企业知识助手',
+    summary: '基于企业确认可用的制度与产品资料快速回答常见问题，每条结论附带原文出处。',
+    highlightTag: '按岗位权限检索 · 关键回复人工复核',
+    href: 'project.html?project=agent',
+    ctaLabel: '体验知识 Agent 原型'
+  },
+  {
+    id: 'automation',
+    badge: '03 · 工作流自动化',
+    shortTab: '工作流',
+    title: '跨工具数据同步与自动审批流转',
+    summary: '减少表单、表格与群聊之间的重复手工搬运，按规则自动分发审批并在异常时提醒。',
+    highlightTag: '多条件分支路由 · 异常节点人工兜底',
+    href: 'project.html?project=workflow',
+    ctaLabel: '体验审批工作流原型'
+  },
+  {
+    id: 'web',
+    badge: '04 · 企业官网建设',
+    shortTab: '官网建设',
+    title: '清晰易懂、多端适配的品牌官网',
+    summary: '梳理企业核心业务价值与服务体系，打造电脑与手机端都加载迅速、方便咨询的品牌门户。',
+    highlightTag: '响应式多端适配 · 清晰转化路径',
+    href: 'capabilities.html#web',
+    ctaLabel: '查看官网建设服务'
+  }
+];
+
 export interface HomeServiceItem {
   id: string;
   title: string;
