@@ -2,7 +2,7 @@
 
 企业软件开发、AI Agent 搭建、工作流自动化与网站搭建服务官网。
 
-线上地址：<https://lizi-product-studio.github.io/>
+线上地址：<https://lizisoft.github.io/>
 
 ## 技术架构
 
