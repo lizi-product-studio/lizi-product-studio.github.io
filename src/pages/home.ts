@@ -34,13 +34,12 @@ function initHeroCarousel(): void {
   if (!root || !viewport || !caption || !tabsContainer) return;
 
   const slides = HERO_CAROUSEL_SLIDES;
-  const SLIDE_DURATION_MS = 4800;
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const SLIDE_DURATION_MS = 3500;
 
   let activeIndex = 0;
-  let isPaused = false;
+  let isHoverPaused = false;
   let elapsedMs = 0;
-  let lastTimestamp = performance.now();
+  let lastTickTime = Date.now();
 
   // 渲染画面层与左右箭头、顶部悬浮业务焦点标签
   viewport.innerHTML = `
@@ -51,14 +50,14 @@ function initHeroCarousel(): void {
         return `<div
           data-carousel-slide="${idx}"
           aria-hidden="${!isCurrent}"
-          class="absolute inset-0 transition-all duration-500 ease-out ${
-            isCurrent ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-[1.03] z-0 pointer-events-none'
+          class="absolute inset-0 carousel-slide-transition ${
+            isCurrent ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-[1.04] z-0 pointer-events-none'
           }"
         >
           <img src="${img.src}" alt="${img.alt}" class="w-full h-full object-cover block" />
           <div class="absolute inset-x-0 top-0 p-3.5 sm:p-4 flex items-center justify-between gap-2 pointer-events-none">
             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/92 backdrop-blur-md border border-slate-200/80 text-xs font-semibold text-blue-700 shadow-xs">
-              <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+              <span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></span>
               <span>${slide.badge}</span>
             </span>
             <span class="hidden sm:inline-flex items-center px-3 py-1 rounded-full bg-slate-900/75 backdrop-blur-md text-[11px] font-medium text-white">
@@ -100,10 +99,10 @@ function initHeroCarousel(): void {
         }"
       >
         <span class="block text-xs sm:text-[13px] truncate">${slide.shortTab}</span>
-        <span aria-hidden="true" class="absolute inset-x-0 bottom-0 h-[3px] bg-slate-200/70">
+        <span aria-hidden="true" class="absolute inset-x-0 bottom-0 h-[3px] bg-slate-200/80">
           <span
             data-carousel-progress="${idx}"
-            class="block h-full bg-blue-600 origin-left transition-none"
+            class="block h-full bg-blue-600 origin-left"
             style="transform: scaleX(0)"
           ></span>
         </span>
@@ -148,13 +147,13 @@ function initHeroCarousel(): void {
   const goToSlide = (nextIdx: number) => {
     activeIndex = (nextIdx + slides.length) % slides.length;
     elapsedMs = 0;
-    lastTimestamp = performance.now();
+    lastTickTime = Date.now();
 
     slideEls.forEach((el, idx) => {
       const current = idx === activeIndex;
       el.setAttribute('aria-hidden', String(!current));
-      el.className = `absolute inset-0 transition-all duration-500 ease-out ${
-        current ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-[1.03] z-0 pointer-events-none'
+      el.className = `absolute inset-0 carousel-slide-transition ${
+        current ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-[1.04] z-0 pointer-events-none'
       }`;
     });
 
@@ -211,42 +210,28 @@ function initHeroCarousel(): void {
     }
   });
 
-  // 鼠标移入或焦点在轮播内时自动暂停
-  root.addEventListener('mouseenter', () => {
-    isPaused = true;
+  // 仅在鼠标悬停在画面视口上时暂停，移开即恢复自动播放（不受 Windows 系统动画开关或点击焦点锁死影响）
+  viewport.addEventListener('mouseenter', () => {
+    isHoverPaused = true;
   });
-  root.addEventListener('mouseleave', () => {
-    isPaused = false;
-    lastTimestamp = performance.now();
-  });
-  root.addEventListener('focusin', () => {
-    isPaused = true;
-  });
-  root.addEventListener('focusout', (event) => {
-    const nextTarget = event.relatedTarget as Node | null;
-    if (!nextTarget || !root.contains(nextTarget)) {
-      isPaused = false;
-      lastTimestamp = performance.now();
-    }
+  viewport.addEventListener('mouseleave', () => {
+    isHoverPaused = false;
+    lastTickTime = Date.now();
   });
 
-  // 读秒进度条与自动轮播循环
-  if (!reducedMotion) {
-    const tick = (now: number) => {
-      if (!isPaused && !document.hidden) {
-        const dt = now - lastTimestamp;
-        elapsedMs += dt;
-        if (elapsedMs >= SLIDE_DURATION_MS) {
-          goToSlide(activeIndex + 1);
-        } else {
-          updateProgressBars(elapsedMs / SLIDE_DURATION_MS);
-        }
+  // 使用稳定高频定时器驱动进度条与自动切换（每 3.5 秒自动轮播下一帧）
+  window.setInterval(() => {
+    const now = Date.now();
+    if (!isHoverPaused && !document.hidden) {
+      elapsedMs += now - lastTickTime;
+      if (elapsedMs >= SLIDE_DURATION_MS) {
+        goToSlide(activeIndex + 1);
+      } else {
+        updateProgressBars(elapsedMs / SLIDE_DURATION_MS);
       }
-      lastTimestamp = now;
-      requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  }
+    }
+    lastTickTime = now;
+  }, 40);
 }
 
 function renderServices(): void {
@@ -276,6 +261,13 @@ function initScenarioTabs(): void {
   const tabs = [...document.querySelectorAll<HTMLButtonElement>('[data-scene-tab]')];
   const panel = document.getElementById('home-scenario-panel');
   if (!panel || tabs.length === 0) return;
+
+  const scenarioOrder: readonly HomeScenarioId[] = ['operations', 'agent', 'workflow'];
+  const SCENARIO_DURATION_MS = 4800;
+  let activeId: HomeScenarioId = 'operations';
+  let scenarioHovered = false;
+  let scenarioElapsed = 0;
+  let scenarioLastTick = Date.now();
 
   const renderPanel = (id: HomeScenarioId) => {
     const spec = HOME_SCENARIOS[id];
@@ -315,6 +307,10 @@ function initScenarioTabs(): void {
   };
 
   const selectTab = (id: HomeScenarioId) => {
+    activeId = id;
+    scenarioElapsed = 0;
+    scenarioLastTick = Date.now();
+
     tabs.forEach((tab) => {
       const active = tab.dataset.sceneTab === id;
       tab.setAttribute('aria-selected', String(active));
@@ -348,6 +344,28 @@ function initScenarioTabs(): void {
       }
     });
   });
+
+  panel.addEventListener('mouseenter', () => {
+    scenarioHovered = true;
+  });
+  panel.addEventListener('mouseleave', () => {
+    scenarioHovered = false;
+    scenarioLastTick = Date.now();
+  });
+
+  // 典型业务场景同样支持自动循环轮播
+  window.setInterval(() => {
+    const now = Date.now();
+    if (!scenarioHovered && !document.hidden) {
+      scenarioElapsed += now - scenarioLastTick;
+      if (scenarioElapsed >= SCENARIO_DURATION_MS) {
+        const currentIdx = scenarioOrder.indexOf(activeId);
+        const nextId = scenarioOrder[(currentIdx + 1) % scenarioOrder.length] ?? 'operations';
+        selectTab(nextId);
+      }
+    }
+    scenarioLastTick = now;
+  }, 100);
 
   selectTab('operations');
 }
