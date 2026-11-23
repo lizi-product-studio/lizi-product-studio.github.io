@@ -242,17 +242,48 @@ function initHeroCarousel(): void {
     lastTickTime = Date.now();
   });
 
-  // 3D 微倾斜交互
+  // 3D 微倾斜交互（缓存包围盒 + RAF 节流）
   if (window.matchMedia('(pointer: fine)').matches) {
-    root.addEventListener('pointermove', (event) => {
-      const rect = root.getBoundingClientRect();
-      const nx = (event.clientX - rect.left) / rect.width - 0.5;
-      const ny = (event.clientY - rect.top) / rect.height - 0.5;
-      root.style.transform = `perspective(1200px) rotateX(${(-ny * 3.5).toFixed(2)}deg) rotateY(${(nx * 4.5).toFixed(2)}deg)`;
-    });
-    root.addEventListener('pointerleave', () => {
-      root.style.transform = '';
-    });
+    let cachedRect: DOMRect | null = null;
+    let rafId = 0;
+
+    root.addEventListener(
+      'pointerenter',
+      () => {
+        cachedRect = root.getBoundingClientRect();
+      },
+      { passive: true }
+    );
+
+    root.addEventListener(
+      'pointermove',
+      (event) => {
+        const cx = event.clientX;
+        const cy = event.clientY;
+        if (rafId) return;
+        rafId = window.requestAnimationFrame(() => {
+          rafId = 0;
+          if (!cachedRect) cachedRect = root.getBoundingClientRect();
+          const nx = (cx - cachedRect.left) / cachedRect.width - 0.5;
+          const ny = (cy - cachedRect.top) / cachedRect.height - 0.5;
+          root.style.transform = `perspective(1200px) rotateX(${(-ny * 3).toFixed(2)}deg) rotateY(${(nx * 4).toFixed(2)}deg)`;
+        });
+      },
+      { passive: true }
+    );
+
+    root.addEventListener(
+      'pointerleave',
+      () => {
+        if (rafId) {
+          window.cancelAnimationFrame(rafId);
+          rafId = 0;
+        }
+        cachedRect = null;
+        root.style.transform = '';
+      },
+      { passive: true }
+    );
   }
 
   window.setInterval(() => {
@@ -266,7 +297,7 @@ function initHeroCarousel(): void {
       }
     }
     lastTickTime = now;
-  }, 40);
+  }, 80);
 }
 
 function renderServices(): void {
@@ -419,7 +450,7 @@ function initScenarioTabs(): void {
       }
     }
     scenarioLastTick = now;
-  }, 40);
+  }, 80);
 
   selectTab('operations');
 }

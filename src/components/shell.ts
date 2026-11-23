@@ -100,7 +100,7 @@ export function scrambleText(el: HTMLElement | null, targetText: string, duratio
 }
 
 /**
- * Lusion 风格自定义双环磁性流体光标
+ * Lusion 风格自定义双环磁性流体光标（按需 RAF 唤醒 + 纯 GPU transform 缩放）
  */
 function initCustomMagneticCursor(): void {
   if (!window.matchMedia('(pointer: fine)').matches) return;
@@ -120,6 +120,27 @@ function initCustomMagneticCursor(): void {
   let mouseY = -100;
   let ringX = -100;
   let ringY = -100;
+  let ringScale = 1;
+  let targetScale = 1;
+  let cursorRafRunning = false;
+
+  const animateCursor = () => {
+    ringX += (mouseX - ringX) * 0.36;
+    ringY += (mouseY - ringY) * 0.36;
+    ringScale += (targetScale - ringScale) * 0.28;
+
+    ring.style.transform = `translate3d(${(ringX - 17).toFixed(1)}px, ${(ringY - 17).toFixed(1)}px, 0) scale(${ringScale.toFixed(3)})`;
+
+    if (
+      Math.abs(mouseX - ringX) > 0.2 ||
+      Math.abs(mouseY - ringY) > 0.2 ||
+      Math.abs(targetScale - ringScale) > 0.01
+    ) {
+      window.requestAnimationFrame(animateCursor);
+    } else {
+      cursorRafRunning = false;
+    }
+  };
 
   window.addEventListener(
     'pointermove',
@@ -129,28 +150,28 @@ function initCustomMagneticCursor(): void {
       dot.style.transform = `translate3d(${mouseX - 3.5}px, ${mouseY - 3.5}px, 0)`;
 
       const interactive = (event.target as HTMLElement | null)?.closest('a, button, select, input, textarea, [data-carousel-tab]');
-      ring.classList.toggle('is-hovering', Boolean(interactive));
+      const hovering = Boolean(interactive);
+      ring.classList.toggle('is-hovering', hovering);
+      targetScale = hovering ? 1.48 : 1;
+
+      if (!cursorRafRunning) {
+        cursorRafRunning = true;
+        window.requestAnimationFrame(animateCursor);
+      }
     },
     { passive: true }
   );
-
-  const animateCursor = () => {
-    ringX += (mouseX - ringX) * 0.18;
-    ringY += (mouseY - ringY) * 0.18;
-    const sizeOffset = ring.classList.contains('is-hovering') ? 27 : 17;
-    ring.style.transform = `translate3d(${(ringX - sizeOffset).toFixed(1)}px, ${(ringY - sizeOffset).toFixed(1)}px, 0)`;
-    window.requestAnimationFrame(animateCursor);
-  };
-  window.requestAnimationFrame(animateCursor);
 }
 
 /**
- * 为全站按钮与 CTA 注入流光、磁吸悬浮与点击坐标水波纹
+ * 为全站按钮与 CTA 注入流光、磁吸悬浮与点击坐标水波纹（缓存包围盒避免布局抖动）
  */
 export function enhanceInteractiveButtons(root: ParentNode = document): void {
   const candidates = root.querySelectorAll<HTMLElement>(
     'a[class*="rounded-lg"], a[class*="rounded-xl"], a[class*="rounded-full"], button[class*="rounded-lg"], button[class*="rounded-xl"], button[class*="rounded-full"]'
   );
+
+  const isFinePointer = window.matchMedia('(pointer: fine)').matches;
 
   candidates.forEach((el) => {
     if (el.dataset.fxReady === 'true') return;
@@ -164,18 +185,37 @@ export function enhanceInteractiveButtons(root: ParentNode = document): void {
       el.classList.add('btn-fx-secondary');
     }
 
-    if (window.matchMedia('(pointer: fine)').matches && !cls.includes('absolute') && !cls.includes('fixed')) {
-      el.addEventListener('pointermove', (event) => {
-        const rect = el.getBoundingClientRect();
-        if (rect.width > 360) return;
-        const dx = event.clientX - (rect.left + rect.width / 2);
-        const dy = event.clientY - (rect.top + rect.height / 2);
-        el.style.transform = `translate3d(${(dx * 0.16).toFixed(2)}px, ${(dy * 0.22).toFixed(2)}px, 0)`;
-      });
+    if (isFinePointer && !cls.includes('absolute') && !cls.includes('fixed')) {
+      let cachedRect: DOMRect | null = null;
 
-      el.addEventListener('pointerleave', () => {
-        el.style.transform = '';
-      });
+      el.addEventListener(
+        'pointerenter',
+        () => {
+          cachedRect = el.getBoundingClientRect();
+        },
+        { passive: true }
+      );
+
+      el.addEventListener(
+        'pointermove',
+        (event) => {
+          if (!cachedRect) cachedRect = el.getBoundingClientRect();
+          if (cachedRect.width > 360) return;
+          const dx = event.clientX - (cachedRect.left + cachedRect.width / 2);
+          const dy = event.clientY - (cachedRect.top + cachedRect.height / 2);
+          el.style.transform = `translate3d(${(dx * 0.14).toFixed(1)}px, ${(dy * 0.2).toFixed(1)}px, 0)`;
+        },
+        { passive: true }
+      );
+
+      el.addEventListener(
+        'pointerleave',
+        () => {
+          cachedRect = null;
+          el.style.transform = '';
+        },
+        { passive: true }
+      );
     }
   });
 }
@@ -207,12 +247,14 @@ function initGlobalClickRipple(): void {
 }
 
 /**
- * 为全站卡片与视觉图框注入全息棱镜折射聚光灯与 3D 悬浮倾斜
+ * 为全站卡片与视觉图框注入全息棱镜折射聚光灯与 3D 悬浮倾斜（RAF 节流 + 包围盒缓存）
  */
 export function enhanceCardsAndTilt(root: ParentNode = document): void {
   const cards = root.querySelectorAll<HTMLElement>(
     'article, #home-services-grid > div, #guarantees-grid > div, #about-principles-grid > div, #approach-steps > div, #home-process-list > li, .holo-surface'
   );
+
+  const isFinePointer = window.matchMedia('(pointer: fine)').matches;
 
   cards.forEach((card) => {
     if (card.dataset.spotlightReady === 'true') return;
@@ -222,23 +264,60 @@ export function enhanceCardsAndTilt(root: ParentNode = document): void {
       card.classList.add('p-6');
     }
 
-    card.addEventListener('pointermove', (event) => {
-      const rect = card.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      card.style.setProperty('--mx', `${x.toFixed(1)}px`);
-      card.style.setProperty('--my', `${y.toFixed(1)}px`);
+    if (!isFinePointer) return;
 
-      if (window.matchMedia('(pointer: fine)').matches && rect.width < 680) {
-        const nx = x / rect.width - 0.5;
-        const ny = y / rect.height - 0.5;
-        card.style.transform = `perspective(1100px) rotateX(${(-ny * 6).toFixed(2)}deg) rotateY(${(nx * 7).toFixed(2)}deg) translateY(-4px)`;
-      }
-    });
+    let cachedRect: DOMRect | null = null;
+    let rafId = 0;
+    let lastClientX = 0;
+    let lastClientY = 0;
 
-    card.addEventListener('pointerleave', () => {
-      card.style.transform = '';
-    });
+    card.addEventListener(
+      'pointerenter',
+      () => {
+        cachedRect = card.getBoundingClientRect();
+        card.classList.add('is-tilting');
+      },
+      { passive: true }
+    );
+
+    card.addEventListener(
+      'pointermove',
+      (event) => {
+        lastClientX = event.clientX;
+        lastClientY = event.clientY;
+        if (rafId) return;
+
+        rafId = window.requestAnimationFrame(() => {
+          rafId = 0;
+          if (!cachedRect) cachedRect = card.getBoundingClientRect();
+          const x = lastClientX - cachedRect.left;
+          const y = lastClientY - cachedRect.top;
+          card.style.setProperty('--mx', `${x.toFixed(0)}px`);
+          card.style.setProperty('--my', `${y.toFixed(0)}px`);
+
+          if (cachedRect.width < 680) {
+            const nx = x / cachedRect.width - 0.5;
+            const ny = y / cachedRect.height - 0.5;
+            card.style.transform = `perspective(1100px) rotateX(${(-ny * 5.2).toFixed(2)}deg) rotateY(${(nx * 6).toFixed(2)}deg) translate3d(0, -3px, 0)`;
+          }
+        });
+      },
+      { passive: true }
+    );
+
+    card.addEventListener(
+      'pointerleave',
+      () => {
+        if (rafId) {
+          window.cancelAnimationFrame(rafId);
+          rafId = 0;
+        }
+        cachedRect = null;
+        card.classList.remove('is-tilting');
+        card.style.transform = '';
+      },
+      { passive: true }
+    );
   });
 }
 
@@ -362,7 +441,7 @@ function initPageTransitions(): void {
 
     window.setTimeout(() => {
       window.location.href = targetUrl.href;
-    }, 185);
+    }, 85);
   });
 }
 
