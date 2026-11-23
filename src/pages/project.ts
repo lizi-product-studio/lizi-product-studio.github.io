@@ -1,5 +1,9 @@
 import '../styles/main.css';
-import { initShell } from '../components/shell';
+import {
+  enhanceInteractiveButtons,
+  initShell,
+  showToast
+} from '../components/shell';
 import {
   AGENT_PRESET_QUESTIONS,
   CONCEPTS,
@@ -348,6 +352,11 @@ function initProjectPage(): void {
     else if (currentConceptId === 'agent') viewContainer.innerHTML = renderAgentView();
     else viewContainer.innerHTML = renderWorkflowView();
 
+    viewContainer.classList.remove('panel-morph-enter');
+    void viewContainer.offsetWidth;
+    viewContainer.classList.add('panel-morph-enter');
+    enhanceInteractiveButtons(viewContainer);
+
     viewContainer.querySelectorAll<HTMLElement>('[data-goto]').forEach((btn) => {
       btn.addEventListener('click', () => {
         const target = btn.dataset.goto;
@@ -357,6 +366,7 @@ function initProjectPage(): void {
 
     viewContainer.querySelector('#task-toggle')?.addEventListener('click', () => {
       taskDone = !taskDone;
+      showToast(taskDone ? '方案已确认，操作记录已实时同步' : '已重置为待确认演示状态');
       renderDemoBody();
       (viewContainer.querySelector('#task-toggle') as HTMLElement | null)?.focus({ preventScroll: true });
     });

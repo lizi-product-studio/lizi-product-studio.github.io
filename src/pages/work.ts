@@ -53,7 +53,12 @@ function initFilters(): void {
     cards.forEach((card) => {
       const show = filter === 'all' || card.dataset.category === filter;
       card.hidden = !show;
-      if (show) visibleCount += 1;
+      if (show) {
+        visibleCount += 1;
+        card.classList.remove('panel-morph-enter');
+        void card.offsetWidth;
+        card.classList.add('panel-morph-enter');
+      }
     });
 
     if (grid) {

@@ -17,7 +17,7 @@
 
     <main id="main">
       <!-- Hero 首屏：左侧核心价值主张 + 右侧四大核心业务自动轮播画廊 -->
-      <section aria-labelledby="home-hero-title" class="bg-gradient-to-b from-[#F5F8FD] via-white to-white">
+      <section id="home-hero-section" aria-labelledby="home-hero-title" class="hero-interactive-bg bg-gradient-to-b from-[#F5F8FD] via-white to-white">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16 lg:pt-16 lg:pb-24">
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             <div class="lg:col-span-5">
@@ -100,7 +100,7 @@
             </p>
           </div>
 
-          <div class="mt-10 flex flex-wrap items-center justify-center gap-2" role="tablist" aria-label="典型业务场景">
+          <div class="mt-10 flex flex-wrap items-center justify-center gap-2.5" role="tablist" aria-label="典型业务场景">
             <button
               type="button"
               id="scene-tab-operations"
@@ -108,9 +108,12 @@
               aria-selected="true"
               aria-controls="home-scenario-panel"
               data-scene-tab="operations"
-              class="px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors bg-blue-600 text-white"
+              class="relative overflow-hidden px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors bg-blue-600 text-white"
             >
-              运营与订单协同
+              <span>运营与订单协同</span>
+              <span aria-hidden="true" class="absolute inset-x-0 bottom-0 h-[3px] bg-white/25">
+                <span data-scene-progress="operations" class="block h-full bg-white origin-left" style="transform: scaleX(0)"></span>
+              </span>
             </button>
             <button
               type="button"
@@ -120,9 +123,12 @@
               aria-controls="home-scenario-panel"
               tabindex="-1"
               data-scene-tab="agent"
-              class="px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors bg-white text-slate-700 hover:bg-slate-100 border border-slate-200"
+              class="relative overflow-hidden px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors bg-white text-slate-700 hover:bg-slate-100 border border-slate-200"
             >
-              企业知识问答 AI
+              <span>企业知识问答 AI</span>
+              <span aria-hidden="true" class="absolute inset-x-0 bottom-0 h-[3px] bg-transparent">
+                <span data-scene-progress="agent" class="block h-full bg-white origin-left" style="transform: scaleX(0)"></span>
+              </span>
             </button>
             <button
               type="button"
@@ -132,9 +138,12 @@
               aria-controls="home-scenario-panel"
               tabindex="-1"
               data-scene-tab="workflow"
-              class="px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors bg-white text-slate-700 hover:bg-slate-100 border border-slate-200"
+              class="relative overflow-hidden px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors bg-white text-slate-700 hover:bg-slate-100 border border-slate-200"
             >
-              自动化审批流转
+              <span>自动化审批流转</span>
+              <span aria-hidden="true" class="absolute inset-x-0 bottom-0 h-[3px] bg-transparent">
+                <span data-scene-progress="workflow" class="block h-full bg-white origin-left" style="transform: scaleX(0)"></span>
+              </span>
             </button>
           </div>
 

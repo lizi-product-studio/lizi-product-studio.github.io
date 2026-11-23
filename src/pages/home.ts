@@ -3,7 +3,11 @@ import heroVisualImg from '../assets/images/hero-visual.jpg';
 import solutionAgentImg from '../assets/images/solution-agent.jpg';
 import solutionSoftwareImg from '../assets/images/solution-software.jpg';
 import solutionWorkflowImg from '../assets/images/solution-workflow.jpg';
-import { initShell } from '../components/shell';
+import {
+  enhanceCardsAndTilt,
+  enhanceInteractiveButtons,
+  initShell
+} from '../components/shell';
 import {
   HERO_CAROUSEL_SLIDES,
   HOME_PROCESS_STEPS,
@@ -26,6 +30,33 @@ const SCENARIO_IMAGES: Record<HomeScenarioId, { src: string; alt: string }> = {
   workflow: { src: solutionWorkflowImg, alt: '企业自动化审批流转三维视觉图' }
 };
 
+function initHeroInteractiveAmbient(): void {
+  const heroSection = document.getElementById('home-hero-section');
+  const heroCarousel = document.getElementById('hero-carousel');
+  if (!heroSection || !window.matchMedia('(pointer: fine)').matches) return;
+
+  heroSection.addEventListener('pointermove', (event) => {
+    const rect = heroSection.getBoundingClientRect();
+    const xPct = (((event.clientX - rect.left) / rect.width) * 100).toFixed(1);
+    const yPct = (((event.clientY - rect.top) / rect.height) * 100).toFixed(1);
+    heroSection.style.setProperty('--hx', `${xPct}%`);
+    heroSection.style.setProperty('--hy', `${yPct}%`);
+  });
+
+  if (heroCarousel) {
+    heroCarousel.classList.add('tilt-card');
+    heroCarousel.addEventListener('pointermove', (event) => {
+      const rect = heroCarousel.getBoundingClientRect();
+      const nx = (event.clientX - rect.left) / rect.width - 0.5;
+      const ny = (event.clientY - rect.top) / rect.height - 0.5;
+      heroCarousel.style.transform = `perspective(1200px) rotateX(${(-ny * 3.5).toFixed(2)}deg) rotateY(${(nx * 4.5).toFixed(2)}deg)`;
+    });
+    heroCarousel.addEventListener('pointerleave', () => {
+      heroCarousel.style.transform = '';
+    });
+  }
+}
+
 function initHeroCarousel(): void {
   const root = document.getElementById('hero-carousel');
   const viewport = document.getElementById('hero-carousel-viewport');
@@ -41,7 +72,6 @@ function initHeroCarousel(): void {
   let elapsedMs = 0;
   let lastTickTime = Date.now();
 
-  // 渲染画面层与左右箭头、顶部悬浮业务焦点标签
   viewport.innerHTML = `
     ${slides
       .map((slide, idx) => {
@@ -85,7 +115,6 @@ function initHeroCarousel(): void {
     </button>
   `;
 
-  // 渲染底部 4 个带进度条的指示器按钮
   tabsContainer.innerHTML = slides
     .map(
       (slide, idx) => `<button
@@ -116,7 +145,7 @@ function initHeroCarousel(): void {
 
   const renderCaption = (index: number) => {
     const slide = slides[index] ?? slides[0];
-    caption.innerHTML = `<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    caption.innerHTML = `<div class="panel-morph-enter flex flex-col sm:flex-row sm:items-center justify-between gap-3">
       <div class="min-w-0">
         <div class="flex items-center gap-2">
           <h2 class="text-base sm:text-lg font-bold text-slate-950 truncate">${slide.title}</h2>
@@ -196,7 +225,6 @@ function initHeroCarousel(): void {
     });
   });
 
-  // 触屏/鼠标横向滑动切换支持
   let pointerStartX: number | null = null;
   viewport.addEventListener('pointerdown', (event) => {
     pointerStartX = event.clientX;
@@ -210,7 +238,6 @@ function initHeroCarousel(): void {
     }
   });
 
-  // 仅在鼠标悬停在画面视口上时暂停，移开即恢复自动播放（不受 Windows 系统动画开关或点击焦点锁死影响）
   viewport.addEventListener('mouseenter', () => {
     isHoverPaused = true;
   });
@@ -219,7 +246,6 @@ function initHeroCarousel(): void {
     lastTickTime = Date.now();
   });
 
-  // 使用稳定高频定时器驱动进度条与自动切换（每 3.5 秒自动轮播下一帧）
   window.setInterval(() => {
     const now = Date.now();
     if (!isHoverPaused && !document.hidden) {
@@ -239,12 +265,12 @@ function renderServices(): void {
   if (!container) return;
 
   container.innerHTML = HOME_SERVICES.map(
-    (item) => `<div class="flex flex-col justify-between">
+    (item) => `<div class="group flex flex-col justify-between">
       <div>
-        <div class="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-blue-50 text-blue-600">
+        <div class="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-110 transition-all duration-300">
           ${item.iconSvg}
         </div>
-        <h3 class="mt-5 text-lg font-bold text-slate-950">${item.title}</h3>
+        <h3 class="mt-5 text-lg font-bold text-slate-950 group-hover:text-blue-600 transition-colors">${item.title}</h3>
         <p class="mt-2.5 text-sm text-slate-600 leading-relaxed">${item.summary}</p>
       </div>
       <div class="mt-5">
@@ -259,22 +285,33 @@ function renderServices(): void {
 
 function initScenarioTabs(): void {
   const tabs = [...document.querySelectorAll<HTMLButtonElement>('[data-scene-tab]')];
+  const progressBars = [...document.querySelectorAll<HTMLElement>('[data-scene-progress]')];
   const panel = document.getElementById('home-scenario-panel');
   if (!panel || tabs.length === 0) return;
 
   const scenarioOrder: readonly HomeScenarioId[] = ['operations', 'agent', 'workflow'];
-  const SCENARIO_DURATION_MS = 4800;
+  const SCENARIO_DURATION_MS = 4500;
   let activeId: HomeScenarioId = 'operations';
   let scenarioHovered = false;
   let scenarioElapsed = 0;
   let scenarioLastTick = Date.now();
+
+  const updateScenarioProgress = (ratio: number) => {
+    progressBars.forEach((bar) => {
+      if (bar.dataset.sceneProgress === activeId) {
+        bar.style.transform = `scaleX(${Math.min(1, Math.max(0, ratio))})`;
+      } else {
+        bar.style.transform = 'scaleX(0)';
+      }
+    });
+  };
 
   const renderPanel = (id: HomeScenarioId) => {
     const spec = HOME_SCENARIOS[id];
     const visual = SCENARIO_IMAGES[id];
 
     panel.setAttribute('aria-labelledby', `scene-tab-${id}`);
-    panel.innerHTML = `<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+    panel.innerHTML = `<div class="panel-morph-enter grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
       <div class="lg:col-span-5">
         <h3 class="text-2xl font-bold text-slate-950 leading-snug">${spec.title}</h3>
         <p class="mt-3.5 text-sm sm:text-base text-slate-600 leading-relaxed">${spec.description}</p>
@@ -291,7 +328,7 @@ function initScenarioTabs(): void {
             .join('')}
         </ul>
         <div class="mt-7">
-          <a href="${spec.demoHref}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors">
+          <a href="${spec.demoHref}" class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-blue-50 hover:bg-blue-600 text-blue-700 hover:text-white text-sm font-semibold transition-colors">
             <span>${spec.demoLabel}</span>
             <span aria-hidden="true">→</span>
           </a>
@@ -299,11 +336,14 @@ function initScenarioTabs(): void {
       </div>
 
       <div class="lg:col-span-7">
-        <div class="rounded-xl overflow-hidden bg-[#F4F7FB] border border-slate-200/70">
+        <div class="rounded-xl overflow-hidden bg-[#F4F7FB] border border-slate-200/70 shadow-sm">
           <img src="${visual.src}" alt="${visual.alt}" class="w-full aspect-video object-cover block" />
         </div>
       </div>
     </div>`;
+
+    enhanceInteractiveButtons(panel);
+    enhanceCardsAndTilt(panel);
   };
 
   const selectTab = (id: HomeScenarioId) => {
@@ -316,9 +356,10 @@ function initScenarioTabs(): void {
       tab.setAttribute('aria-selected', String(active));
       tab.tabIndex = active ? 0 : -1;
       tab.className = active
-        ? 'px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors bg-blue-600 text-white'
-        : 'px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors bg-white text-slate-700 hover:bg-slate-100 border border-slate-200';
+        ? 'relative overflow-hidden px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors bg-blue-600 text-white shadow-sm'
+        : 'relative overflow-hidden px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors bg-white text-slate-700 hover:bg-slate-100 border border-slate-200';
     });
+    updateScenarioProgress(0);
     renderPanel(id);
   };
 
@@ -353,7 +394,6 @@ function initScenarioTabs(): void {
     scenarioLastTick = Date.now();
   });
 
-  // 典型业务场景同样支持自动循环轮播
   window.setInterval(() => {
     const now = Date.now();
     if (!scenarioHovered && !document.hidden) {
@@ -362,10 +402,12 @@ function initScenarioTabs(): void {
         const currentIdx = scenarioOrder.indexOf(activeId);
         const nextId = scenarioOrder[(currentIdx + 1) % scenarioOrder.length] ?? 'operations';
         selectTab(nextId);
+      } else {
+        updateScenarioProgress(scenarioElapsed / SCENARIO_DURATION_MS);
       }
     }
     scenarioLastTick = now;
-  }, 100);
+  }, 40);
 
   selectTab('operations');
 }
@@ -375,16 +417,17 @@ function renderProcessSteps(): void {
   if (!list) return;
 
   list.innerHTML = HOME_PROCESS_STEPS.map(
-    (item) => `<li>
-      <span class="block text-2xl font-bold text-blue-600/80 tabular-nums">${item.step}</span>
-      <h3 class="mt-3 text-lg font-bold text-slate-950">${item.title}</h3>
+    (item) => `<li class="group">
+      <span class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-blue-50 text-blue-600 text-base font-bold tabular-nums group-hover:bg-blue-600 group-hover:text-white group-hover:scale-110 transition-all duration-300">${item.step}</span>
+      <h3 class="mt-4 text-lg font-bold text-slate-950 group-hover:text-blue-600 transition-colors">${item.title}</h3>
       <p class="mt-2 text-sm text-slate-600 leading-relaxed">${item.description}</p>
     </li>`
   ).join('');
 }
 
-initShell();
+initHeroInteractiveAmbient();
 initHeroCarousel();
 renderServices();
 initScenarioTabs();
 renderProcessSteps();
+initShell();

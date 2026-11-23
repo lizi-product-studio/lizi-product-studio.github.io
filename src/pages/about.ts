@@ -1,5 +1,5 @@
 import '../styles/main.css';
-import { copyToClipboard, initShell } from '../components/shell';
+import { copyToClipboard, initShell, showToast } from '../components/shell';
 import { ABOUT_PRINCIPLES, CONSULT_SERVICE_OPTIONS, type ConsultServiceKey } from '../data/about';
 import { SITE } from '../data/site';
 
@@ -177,6 +177,9 @@ function initConsultSection(): void {
       const value = button.dataset.contactCopy ?? '';
       if (!value) return;
       const copied = await copyToClipboard(value);
+      if (copied) {
+        showToast(`已复制到剪贴板：${value}`);
+      }
       if (contactCopyStatus) {
         contactCopyStatus.textContent = copied ? `已复制到剪贴板：${value}` : `请手动复制：${value}`;
       }
